@@ -14,7 +14,7 @@
 | Phase 2.3 | Admin Authentication | Completed | feature/central-admin-app |
 | Phase 2.4 | Admin Dashboard | Completed | feature/central-admin-app |
 | Phase 2.5 | Tenant Management CRUD | Completed | feature/central-admin-app |
-| Phase 2.6 | Tenant Seeding on Creation | Pending | feature/central-admin-app |
+| Phase 2.6 | Tenant Seeding on Creation | Completed | feature/central-admin-app |
 | Phase 3.1 | Tenant Database Migrations | Pending | - |
 | Phase 3.2 | Tenant Models | Pending | - |
 | Phase 3.3 | Tenant Authentication | Pending | - |
@@ -26,8 +26,8 @@
 
 ## Current Progress
 
-### Active Phase: Phase 2.6 (Tenant Seeding on Creation)
-### Last Completed: Phase 2.5 (Tenant Management CRUD)
+### Active Phase: Phase 3.1 (Tenant Database Migrations)
+### Last Completed: Phase 2.6 (Tenant Seeding on Creation)
 
 ---
 
@@ -187,17 +187,32 @@ feat(admin): implement full tenant management CRUD
 ---
 
 ### Phase 2.6: Tenant Seeding on Creation
-**Status:** Pending
-**Branch:** -
-**Files to Create:**
-- `database/seeders/TenantDatabaseSeeder.php`
+**Status:** Completed
+**Branch:** feature/central-admin-app
+**Files Created:**
+- `database/migrations/tenant/0001_01_01_000000_create_users_table.php` (tenant users table with role column)
+- `database/seeders/TenantDatabaseSeeder.php` (seeds initial admin user from tenant's admin_email)
 
-**Files to Modify:**
-- `app/Providers/TenancyServiceProvider.php`
-- `config/tenancy.php`
+**Files Modified:**
+- `app/Providers/TenancyServiceProvider.php` (enabled SeedDatabase job in TenantCreated pipeline)
+- `config/tenancy.php` (changed seeder_parameters to use TenantDatabaseSeeder)
 
-**Summary:** -
-**Commit Message:** -
+**Summary:** Implemented automatic tenant seeding when a new tenant is created. When a tenant is created via the admin panel, the system now automatically: 1) Creates the tenant database, 2) Runs migrations to create the users table, 3) Seeds an initial admin user with the email provided during tenant creation (default password: "password", role: "admin").
+
+**Key Features:**
+- Tenant users table with role column (admin/user enum)
+- TenantDatabaseSeeder uses tenant's admin_email to create initial user
+- Automatic seeding via Stancl's SeedDatabase job
+
+**Suggested Commit Message:**
+```
+feat(admin): implement tenant seeding on creation
+
+- Add tenant users migration with role column (admin/user)
+- Create TenantDatabaseSeeder to seed initial admin user from tenant's admin_email
+- Enable SeedDatabase job in TenancyServiceProvider
+- Configure tenancy.php to use TenantDatabaseSeeder
+```
 
 ---
 
@@ -312,6 +327,7 @@ feat(admin): implement full tenant management CRUD
 | 2025-12-06 | Phase 2.3 | Completed admin authentication system |
 | 2025-12-06 | Phase 2.4 | Completed admin dashboard with stats |
 | 2025-12-06 | Phase 2.5 | Completed tenant management CRUD |
+| 2025-12-06 | Phase 2.6 | Completed tenant seeding on creation |
 
 ---
 
