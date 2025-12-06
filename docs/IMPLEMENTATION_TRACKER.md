@@ -13,7 +13,7 @@
 | Phase 2.2 | Admin Middleware | Completed | feature/central-admin-app |
 | Phase 2.3 | Admin Authentication | Completed | feature/central-admin-app |
 | Phase 2.4 | Admin Dashboard | Completed | feature/central-admin-app |
-| Phase 2.5 | Tenant Management CRUD | Pending | feature/central-admin-app |
+| Phase 2.5 | Tenant Management CRUD | Completed | feature/central-admin-app |
 | Phase 2.6 | Tenant Seeding on Creation | Pending | feature/central-admin-app |
 | Phase 3.1 | Tenant Database Migrations | Pending | - |
 | Phase 3.2 | Tenant Models | Pending | - |
@@ -26,8 +26,8 @@
 
 ## Current Progress
 
-### Active Phase: Phase 2.5 (Tenant Management CRUD)
-### Last Completed: Phase 2.4 (Admin Dashboard)
+### Active Phase: Phase 2.6 (Tenant Seeding on Creation)
+### Last Completed: Phase 2.5 (Tenant Management CRUD)
 
 ---
 
@@ -142,25 +142,47 @@ feat(admin): implement admin dashboard with tenant statistics
 ---
 
 ### Phase 2.5: Tenant Management CRUD
-**Status:** Pending
-**Branch:** -
-**Files to Create:**
-- `app/Http/Controllers/Admin/TenantController.php`
+**Status:** Completed
+**Branch:** feature/central-admin-app
+**Files Created:**
+- `app/Services/TenantService.php`
 - `app/Http/Requests/Admin/StoreTenantRequest.php`
 - `app/Http/Requests/Admin/UpdateTenantRequest.php`
-- `app/Services/TenantService.php`
 - `resources/js/Pages/Admin/Tenants/Index.jsx`
 - `resources/js/Pages/Admin/Tenants/Create.jsx`
 - `resources/js/Pages/Admin/Tenants/Edit.jsx`
 - `resources/js/Pages/Admin/Tenants/Show.jsx`
-- `resources/js/Components/Admin/StatusBadge.jsx`
 
-**Files to Modify:**
-- `app/Models/Tenant.php`
-- `routes/admin.php`
+**Files Modified:**
+- `app/Models/Tenant.php` (added fillable, casts, scopes, primaryDomain accessor)
+- `app/Http/Controllers/Admin/TenantController.php` (full CRUD implementation)
+- `routes/admin.php` (removed placeholder comments)
 
-**Summary:** -
-**Commit Message:** -
+**Summary:** Implemented complete tenant management CRUD system. Created TenantService for tenant lifecycle operations (create, update, delete, toggle status). Added form request validation for store/update operations. Built four React pages: Index (paginated table with actions), Create (form with auto-slug domain), Edit (form with disabled domain), Show (detail view with all actions). Features include: pagination, status toggle, delete confirmation, empty states, responsive design.
+
+**Key Features:**
+- Paginated tenant listing with search-friendly table
+- Create tenant with auto-generated subdomain from name
+- Edit tenant (domain locked after creation)
+- View tenant details with quick actions
+- Toggle active/inactive status
+- Delete tenant with confirmation
+- Form validation with custom error messages
+
+**Suggested Commit Message:**
+```
+feat(admin): implement full tenant management CRUD
+
+- Add TenantService for tenant lifecycle operations
+- Create StoreTenantRequest and UpdateTenantRequest validation
+- Implement TenantController with index, create, store, show, edit, update, destroy, toggleStatus
+- Update Tenant model with fillable, casts, scopes, and primaryDomain accessor
+- Add Index page with paginated table and actions
+- Add Create page with auto-slug domain generation
+- Add Edit page with locked domain field
+- Add Show page with detailed tenant information
+- Include status toggle, delete confirmation, and empty states
+```
 
 ---
 
@@ -289,6 +311,7 @@ feat(admin): implement admin dashboard with tenant statistics
 | 2025-12-06 | Phase 2.2 | Completed admin middleware |
 | 2025-12-06 | Phase 2.3 | Completed admin authentication system |
 | 2025-12-06 | Phase 2.4 | Completed admin dashboard with stats |
+| 2025-12-06 | Phase 2.5 | Completed tenant management CRUD |
 
 ---
 

@@ -30,11 +30,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AdminAuthenticatedSessionController::class, 'destroy'])
             ->name('logout');
 
-        // Dashboard (placeholder until Phase 2.4)
+        // Dashboard
         Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
-        // Tenant Management (placeholder until Phase 2.5)
+        // Tenant Management
         Route::resource('tenants', TenantController::class);
         Route::post('tenants/{tenant}/toggle-status', [TenantController::class, 'toggleStatus'])
             ->name('tenants.toggle-status');
