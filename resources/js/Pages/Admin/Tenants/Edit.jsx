@@ -4,9 +4,11 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function Edit({ tenant }) {
+    const { app } = usePage().props;
+
     const { data, setData, put, processing, errors } = useForm({
         name: tenant.name || '',
         admin_email: tenant.admin_email || '',
@@ -69,7 +71,7 @@ export default function Edit({ tenant }) {
                                             disabled={true}
                                         />
                                         <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
-                                            .localhost
+                                            .{app.domain}
                                         </span>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">

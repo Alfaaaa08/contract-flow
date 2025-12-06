@@ -4,9 +4,11 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function Create() {
+    const { app } = usePage().props;
+
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         domain: '',
@@ -19,12 +21,23 @@ export default function Create() {
         post(route('admin.tenants.store'));
     };
 
+    const generateSlug = (name) => {
+        return name
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+    };
+
     const handleNameChange = (e) => {
         const name = e.target.value;
         setData((prev) => ({
             ...prev,
             name,
-            domain: prev.domain || name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''),
+            // Only auto-generate domain if user hasn't manually edited it
+            domain: prev.domain === generateSlug(prev.name) || prev.domain === ''
+                ? generateSlug(name)
+                : prev.domain,
         }));
     };
 
@@ -81,7 +94,7 @@ export default function Create() {
                                             placeholder="acme"
                                         />
                                         <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
-                                            .localhost
+                                            .{app.domain}
                                         </span>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">
