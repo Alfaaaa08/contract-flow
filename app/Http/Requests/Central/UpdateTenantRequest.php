@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Central;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreTenantRequest extends FormRequest
+class UpdateTenantRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,15 +26,12 @@ class StoreTenantRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'domain' => [
+            'admin_email' => [
                 'required',
-                'string',
+                'email',
                 'max:255',
-                'alpha_dash:ascii',
-                Rule::unique('tenants', 'id'),
-                Rule::unique('domains', 'domain'),
+                Rule::unique('tenants', 'admin_email')->ignore($this->route('tenant')),
             ],
-            'admin_email' => ['required', 'email', 'max:255', Rule::unique('tenants', 'admin_email')],
             'is_active' => ['boolean'],
         ];
     }
@@ -47,8 +44,6 @@ class StoreTenantRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'domain.alpha_dash' => 'The domain may only contain letters, numbers, dashes, and underscores.',
-            'domain.unique' => 'This domain is already in use.',
             'admin_email.unique' => 'This email is already associated with another tenant.',
         ];
     }

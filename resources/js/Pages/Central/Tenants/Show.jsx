@@ -1,4 +1,4 @@
-import AdminLayout from '@/Layouts/AdminLayout';
+import CentralLayout from '@/Layouts/CentralLayout';
 import DangerButton from '@/Components/DangerButton';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
@@ -45,7 +45,7 @@ export default function Show({ tenant }) {
     };
 
     return (
-        <AdminLayout
+        <CentralLayout
             header={
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -129,6 +129,6 @@ export default function Show({ tenant }) {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
+        </CentralLayout>
     );
 }

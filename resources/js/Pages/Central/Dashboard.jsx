@@ -1,4 +1,4 @@
-import AdminLayout from '@/Layouts/AdminLayout';
+import CentralLayout from '@/Layouts/CentralLayout';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { Head, Link } from '@inertiajs/react';
 
@@ -42,7 +42,7 @@ function StatusBadge({ isActive }) {
 
 export default function Dashboard({ stats, recentTenants }) {
     return (
-        <AdminLayout
+        <CentralLayout
             header={
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
@@ -161,6 +161,6 @@ export default function Dashboard({ stats, recentTenants }) {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
+        </CentralLayout>
     );
 }

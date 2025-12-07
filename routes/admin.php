@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\Auth\AdminAuthenticatedSessionController;
-use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Central\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Central\DashboardController;
+use App\Http\Controllers\Central\TenantController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes
+| Central Admin Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register admin routes for your application.
+| Here is where you can register central admin routes for your application.
 | These routes are loaded within the central domain group in web.php.
 |
 */
@@ -20,18 +20,19 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest routes (unauthenticated)
     Route::middleware('guest')->group(function () {
-        Route::get('login', [AdminAuthenticatedSessionController::class, 'create'])
-            ->name('login');
-        Route::post('login', [AdminAuthenticatedSessionController::class, 'store']);
+        Route::controller(AuthenticatedSessionController::class)->group(function () {
+            Route::get('login', 'create')->name('login');
+            Route::post('login', 'store');
+        });
     });
 
     // Authenticated admin routes
     Route::middleware(['auth', 'admin'])->group(function () {
-        Route::post('logout', [AdminAuthenticatedSessionController::class, 'destroy'])
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
             ->name('logout');
 
         // Dashboard
-        Route::get('/', [AdminDashboardController::class, 'index'])
+        Route::get('/', [DashboardController::class, 'index'])
             ->name('dashboard');
 
         // Tenant Management

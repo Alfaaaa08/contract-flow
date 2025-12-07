@@ -1,4 +1,4 @@
-import AdminLayout from '@/Layouts/AdminLayout';
+import CentralLayout from '@/Layouts/CentralLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -21,7 +21,7 @@ export default function Edit({ tenant }) {
     };
 
     return (
-        <AdminLayout
+        <CentralLayout
             header={
                 <div className="flex items-center gap-4">
                     <Link
@@ -119,6 +119,6 @@ export default function Edit({ tenant }) {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
+        </CentralLayout>
     );
 }

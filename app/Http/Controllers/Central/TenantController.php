@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreTenantRequest;
-use App\Http\Requests\Admin\UpdateTenantRequest;
+use App\Http\Requests\Central\StoreTenantRequest;
+use App\Http\Requests\Central\UpdateTenantRequest;
 use App\Models\Tenant;
 use App\Services\TenantService;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +36,7 @@ class TenantController extends Controller
                 'created_at' => $tenant->created_at->format('M d, Y'),
             ]);
 
-        return Inertia::render('Admin/Tenants/Index', [
+        return Inertia::render('Central/Tenants/Index', [
             'tenants' => $tenants,
         ]);
     }
@@ -46,7 +46,7 @@ class TenantController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/Tenants/Create');
+        return Inertia::render('Central/Tenants/Create');
     }
 
     /**
@@ -68,7 +68,7 @@ class TenantController extends Controller
     {
         $tenant->load('domains');
 
-        return Inertia::render('Admin/Tenants/Show', [
+        return Inertia::render('Central/Tenants/Show', [
             'tenant' => [
                 'id' => $tenant->id,
                 'name' => $tenant->name,
@@ -88,7 +88,7 @@ class TenantController extends Controller
     {
         $tenant->load('domains');
 
-        return Inertia::render('Admin/Tenants/Edit', [
+        return Inertia::render('Central/Tenants/Edit', [
             'tenant' => [
                 'id' => $tenant->id,
                 'name' => $tenant->name,

@@ -1,4 +1,4 @@
-import AdminLayout from '@/Layouts/AdminLayout';
+import CentralLayout from '@/Layouts/CentralLayout';
 import DangerButton from '@/Components/DangerButton';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
@@ -89,7 +89,7 @@ export default function Index({ tenants }) {
     };
 
     return (
-        <AdminLayout
+        <CentralLayout
             header={
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
@@ -218,6 +218,6 @@ export default function Index({ tenants }) {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
+        </CentralLayout>
     );
 }

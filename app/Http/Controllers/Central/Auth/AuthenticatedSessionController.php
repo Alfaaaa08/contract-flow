@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace App\Http\Controllers\Central\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -12,21 +12,21 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AdminAuthenticatedSessionController extends Controller
+class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the admin login view.
+     * Display the central login view.
      */
     public function create(): Response
     {
-        return Inertia::render('Admin/Auth/Login', [
+        return Inertia::render('Central/Auth/Login', [
             'status' => session('status'),
             'error' => session('error'),
         ]);
     }
 
     /**
-     * Handle an incoming admin authentication request.
+     * Handle an incoming central authentication request.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -58,7 +58,7 @@ class AdminAuthenticatedSessionController extends Controller
     }
 
     /**
-     * Destroy an authenticated admin session.
+     * Destroy an authenticated central session.
      */
     public function destroy(Request $request): RedirectResponse
     {

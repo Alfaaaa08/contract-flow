@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AdminDashboardController extends Controller
+class DashboardController extends Controller
 {
     /**
-     * Display the admin dashboard with tenant statistics.
+     * Display the central dashboard with tenant statistics.
      */
     public function index(): Response
     {
@@ -32,7 +32,7 @@ class AdminDashboardController extends Controller
                 'created_at' => $tenant->created_at->format('M d, Y'),
             ]);
 
-        return Inertia::render('Admin/Dashboard', [
+        return Inertia::render('Central/Dashboard', [
             'stats' => [
                 'total' => $totalTenants,
                 'active' => $activeTenants,
