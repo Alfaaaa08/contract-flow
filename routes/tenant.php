@@ -7,6 +7,7 @@ use App\Http\Controllers\Tenant\Auth\NewPasswordController;
 use App\Http\Controllers\Tenant\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Tenant\Auth\RegisteredUserController;
 use App\Http\Controllers\Tenant\DashboardController;
+use App\Http\Controllers\Tenant\ImpersonationController;
 use App\Http\Controllers\Tenant\ProfileController;
 use App\Http\Controllers\Tenant\ProjectController;
 use App\Http\Controllers\Tenant\UserController;
@@ -39,6 +40,10 @@ Route::middleware([
         }
         return redirect()->route('tenant.login');
     });
+
+    // Impersonation route (no auth required - uses signed token)
+    Route::get('impersonate', [ImpersonationController::class, 'login'])
+        ->name('tenant.impersonate');
 
     // Guest routes
     Route::middleware('guest')->group(function () {

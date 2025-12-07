@@ -157,6 +157,17 @@ export default function Index({ tenants }) {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                         <div className="flex items-center justify-end gap-2">
+                                                            {tenant.is_active && (
+                                                                <a
+                                                                    href={route('admin.tenants.login-as', tenant.id)}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-purple-600 hover:text-purple-900"
+                                                                    title="Login as tenant admin"
+                                                                >
+                                                                    Login
+                                                                </a>
+                                                            )}
                                                             <Link
                                                                 href={route('admin.tenants.edit', tenant.id)}
                                                                 className="text-indigo-600 hover:text-indigo-900"

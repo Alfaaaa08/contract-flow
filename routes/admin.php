@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Central\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Central\DashboardController;
 use App\Http\Controllers\Central\TenantController;
+use App\Http\Controllers\Central\TenantImpersonationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,5 +40,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('tenants', TenantController::class);
         Route::post('tenants/{tenant}/toggle-status', [TenantController::class, 'toggleStatus'])
             ->name('tenants.toggle-status');
+        Route::get('tenants/{tenant}/login-as', [TenantImpersonationController::class, 'generateLoginUrl'])
+            ->name('tenants.login-as');
     });
 });
