@@ -107,3 +107,16 @@ Route::middleware([
             });
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Tenant API Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+])->prefix('api')->group(function () {
+    require __DIR__.'/api-tenant.php';
+});
