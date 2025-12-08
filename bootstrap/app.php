@@ -22,15 +22,22 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.admin' => \App\Http\Middleware\EnsureTenantAdmin::class,
         ]);
 
-        // Customize redirect for unauthenticated users
+        // Redirect unauthenticated users based on context
         $middleware->redirectGuestsTo(function (Request $request) {
-            // Check if we're in tenant context
             if (tenancy()->initialized) {
                 return route('tenant.login');
             }
 
-            // Central domain always redirects to admin login
             return route('admin.login');
+        });
+
+        // Redirect authenticated users away from guest routes (login, register)
+        $middleware->redirectUsersTo(function (Request $request) {
+            if (tenancy()->initialized) {
+                return route('tenant.dashboard');
+            }
+
+            return route('admin.dashboard');
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
