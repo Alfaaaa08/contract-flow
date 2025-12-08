@@ -15,7 +15,12 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $project = $this->route('project');
+        $projectId = $this->route('project');
+        $project = Project::find($projectId);
+
+        if (! $project) {
+            return false;
+        }
 
         return $project->isEditableBy($this->user());
     }
