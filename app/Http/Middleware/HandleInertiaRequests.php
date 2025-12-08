@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
@@ -29,11 +31,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return [
+        $shared = [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'app' => [
+                'name' => config('app.name'),
+                'domain' => config('app.domain'),
+            ],
         ];
+
+        // Share tenant data when in tenant context
+        if (tenancy()->initialized && ($tenant = tenant())) {
+            $shared['tenant'] = [
+                'id' => $tenant->id,
+                'name' => $tenant->name,
+            ];
+        }
+
+        return $shared;
     }
 }
