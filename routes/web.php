@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Central\WelcomeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +17,7 @@ use Inertia\Inertia;
 
 foreach (config('tenancy.central_domains') as $domain) {
     Route::domain($domain)->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Welcome', [
-                'laravelVersion' => Application::VERSION,
-                'phpVersion' => PHP_VERSION,
-            ]);
-        });
-
-        // Redirect central /login to admin login
-        Route::get('/login', function () {
-            return redirect()->route('admin.login');
-        })->name('login');
+        Route::get('/', [WelcomeController::class, 'index']);
 
         require __DIR__.'/admin.php';
     });
