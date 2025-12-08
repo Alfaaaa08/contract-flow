@@ -63,6 +63,15 @@ export default function Show({ tenant }) {
                         <StatusBadge isActive={tenant.is_active} />
                     </div>
                     <div className="flex items-center gap-2">
+                        {tenant.is_active && (
+                            <a
+                                href={route('admin.tenants.login-as', tenant.id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <PrimaryButton>Login as Tenant</PrimaryButton>
+                            </a>
+                        )}
                         <Link href={route('admin.tenants.edit', tenant.id)}>
                             <SecondaryButton>Edit</SecondaryButton>
                         </Link>
