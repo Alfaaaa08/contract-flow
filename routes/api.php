@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
-    // Public routes
+    // Public routes 
     Route::post('/login', [AuthController::class, 'login']);
 
     // Protected routes (requires authentication + admin)
