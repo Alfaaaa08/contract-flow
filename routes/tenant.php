@@ -35,12 +35,9 @@ Route::middleware([
 ])->group(function () {
     // Root redirect - accessible to all
     Route::get('/', function () {
-        if (Auth::check()) {
-            return redirect()->route('tenant.dashboard');
-        }
-        return redirect()->route('tenant.login');
+        return \Inertia\Inertia::render('Tenant/Home');
     });
-
+    
     // Impersonation route (no auth required - uses signed token)
     Route::get('impersonate', [ImpersonationController::class, 'login'])
         ->name('tenant.impersonate');
