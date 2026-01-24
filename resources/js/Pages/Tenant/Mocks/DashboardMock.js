@@ -1,11 +1,13 @@
 export const dashboardMock = {
-  totalContracts: 85,
-  activeContracts: 62,
-  expiring30Days: 7,
-  expiring60Days: 12,
-  pipeline: {
-    draft: 30,
-    review: 15,
-    signed: 55,
-  },
+  cards: {
+    activeContracts: 62,
+    expiring30Days: 7,
+    totalContractValue: 106227.29,
+    clientsWithActiveContracts: 12,
+    pipeline: {
+      draft: 30,
+      review: 15,
+      signed: 55,
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import { BookText, LayoutDashboard, User, Search, Settings, LogOut } from "lucide-react"
-
+import { Link } from "@inertiajs/react"
 import {
     Sidebar,
     SidebarHeader,
@@ -15,27 +15,27 @@ import {
 const items = [
     {
         title: "Dashboard",
-        url: "#",
+        url: "/dashboard",
         icon: LayoutDashboard,
     },
     {
         title: "Contracts",
-        url: "#",
+        url: "/contracts",
         icon: BookText,
     },
     {
         title: "Clients",
-        url: "#",
+        url: "/clients",
         icon: User,
     },
     {
         title: "Types",
-        url: "#",
+        url: "/types",
         icon: Search,
     },
     {
         title: "Settings",
-        url: "#",
+        url: "/settings",
         icon: Settings,
     },
 ]
@@ -56,10 +56,13 @@ export default function AppSidebar() {
                                 {items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
                                         <SidebarMenuButton asChild>
-                                            <a href={item.url}>
+                                            <Link
+                                                href={item.url}
+                                                className="text-blue-500 no-blue-link"
+                                            >
                                                 <item.icon />
                                                 <span>{item.title}</span>
-                                            </a>
+                                            </Link>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 ))}
