@@ -4,6 +4,7 @@ import { dashboardMock } from "./Mocks/DashboardMock";
 
 import {
     ContractsOverviewTable,
+    ExpirationSummary,
     StatsCards,
 } from "@/Components/ui";
 
@@ -46,6 +47,14 @@ export default function Dashboard() {
 
                         <div className="overflow-x-auto">
                             <ContractsOverviewTable />
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-6 lg:col-span-4 xl:col-span-3">
+                        <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
+                            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                                Expiring Soon
+                            </h3>
+                            <ExpirationSummary />
                         </div>
                     </div>
                 </div>
