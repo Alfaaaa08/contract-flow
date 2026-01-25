@@ -3,9 +3,10 @@ import TenantLayout from "@/Layouts/TenantLayout";
 import { dashboardMock } from "./Mocks/DashboardMock";
 
 import {
+    StatsCards,
     ContractsOverviewTable,
     ExpirationSummary,
-    StatsCards,
+    ActivityFeed,
 } from "@/Components/ui";
 
 export default function Dashboard() {
@@ -55,6 +56,12 @@ export default function Dashboard() {
                                 Expiring Soon
                             </h3>
                             <ExpirationSummary />
+                        </div>
+                        <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
+                            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                                Recent Activity
+                            </h3>
+                            <ActivityFeed />
                         </div>
                     </div>
                 </div>
