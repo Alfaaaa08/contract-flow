@@ -70,4 +70,4 @@ export default function Dashboard() {
     )
 };
 
-Dashboard.layout = page => <TenantLayout children={page} title="Dashboard"></TenantLayout>
+Dashboard.layout = page => <TenantLayout title="Dashboard">{page}</TenantLayout>
