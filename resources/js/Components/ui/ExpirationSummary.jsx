@@ -3,8 +3,8 @@ import { dashboardMock } from "@/Pages/Tenant/Mocks/DashboardMock"
 export default function ExpirationSummary() {
 	return (
 		<div className="space-y-4">
-			{dashboardMock.expiringContracts.map((contract) => (
-				<div
+			{dashboardMock.expiringContracts.map((contract, index) => (
+				<div key={index}
 					className="border-b border-border/100 last:border-10 pb-3 mb-3 flex items-center justify-between p-2 rounded-md hover:bg-muted/20 transition-colors cursor-pointer"
 				>
 					<div className="flex flex-col w-[75%]">

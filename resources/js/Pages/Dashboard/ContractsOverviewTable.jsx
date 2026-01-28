@@ -44,8 +44,8 @@ export default function ContractsOverviewTable() {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{dashboardMock.overviewTable.map((item) => (
-					<TableRow>
+				{dashboardMock.overviewTable.map((item, index) => (
+					<TableRow key={index}>
 						<TableCell>{item.contractName}</TableCell>
 						<TableCell>{item.client}</TableCell>
 						<TableCell>${item.value}</TableCell>
