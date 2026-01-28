@@ -1,6 +1,6 @@
 import TenantLayout from "@/Layouts/TenantLayout";
-import ContractsToolbar from "@/Components/ContractsToolbar";
-import ContractsTable from "@/Components/ContractsTable";
+import ContractsToolbar from "@/Pages/Contracts/ContractsToolbar";
+import ContractsTable from "@/Pages/Contracts/ContractsTable";
 
 export default function Contracts() {
 	return (

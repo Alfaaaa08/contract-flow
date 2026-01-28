@@ -1,6 +1,6 @@
 import TenantLayout from "@/Layouts/TenantLayout";
 
-import { dashboardMock } from "./Mocks/DashboardMock";
+import { dashboardMock } from "../Tenant/Mocks/DashboardMock";
 
 import {
     StatsCards,
