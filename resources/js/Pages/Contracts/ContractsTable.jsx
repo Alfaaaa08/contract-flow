@@ -44,7 +44,7 @@ export default function ContractsTable({ contracts }) {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{contractsMock.map((contract) => (
+					{contractsMock.contracts.map((contract) => (
 						<TableRow key={contract.id}>
 							<TableCell className="font-medium">
 								<div className="flex items-center gap-3">

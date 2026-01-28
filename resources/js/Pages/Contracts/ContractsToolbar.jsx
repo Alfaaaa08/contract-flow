@@ -1,6 +1,6 @@
 import { Search, Plus } from "lucide-react";
 
-export default function ContractsToolbar() {
+export default function ContractsToolbar({ onCreate }) {
 	return (
 		<div className="flex items-center justify-between w-full gap-4 mb-8">
 			<div className="flex items-center flex-1 gap-3">
@@ -23,7 +23,7 @@ export default function ContractsToolbar() {
 				</select>
 			</div>
 
-			<button className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-semibold hover:opacity-90 transition-all flex items-center gap-2 whitespace-nowrap h-[38px]">
+			<button onClick={onCreate} className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-semibold hover:opacity-90 transition-all flex items-center gap-2 whitespace-nowrap h-[38px]">
 				<Plus className="h-4 w-4" />
 				Create Contract
 			</button>
