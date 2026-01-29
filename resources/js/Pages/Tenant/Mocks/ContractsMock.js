@@ -47,4 +47,48 @@ export const contractsMock = {
             icon: AlertTriangle,
         },
     ],
+    clients: [
+        {
+            id: 1,
+            name: "Global Corp",
+        },
+        {
+            id: 2,
+            name: "Supply Co",
+        },
+        {
+            id: 3,
+            name: "Real Estate Inc",
+        },
+        {
+            id: 4,
+            name: "Tech Solutions",
+        },
+        {
+            id: 5,
+            name: "Acme Corp",
+        },
+    ],
+    types: [
+        {
+            id: 1,
+            name: "Procurement",
+        },
+        {
+            id: 2,
+            name: "Real Estate",
+        },
+        {
+            id: 3,
+            name: "Lease Agreement",
+        },
+        {
+            id: 4,
+            name: "Master Service Agreement",
+        },
+        {
+            id: 5,
+            name: "Service Level Agreement",
+        },
+    ],
 };

@@ -6,13 +6,11 @@ import CreateContractModal from "./Partials/CreateContractModal";
 
 export default function Contracts() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	console.log(isModalOpen)
-
 	return (
 		<div className=" px-4 sm:px-6 lg:px-8">
 			<ContractsToolbar onCreate={() => setIsModalOpen(true)}/>
 			<ContractsTable />
-			<CreateContractModal open={isModalOpen} onOpenChange={setIsModalOpen}/>
+			<CreateContractModal dialogOpen={isModalOpen} onDialogOpenChange={setIsModalOpen}/>
 		</div>
 	);
 }
