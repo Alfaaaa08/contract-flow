@@ -154,11 +154,10 @@ export default function CreateContractModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="value">Value ($)</Label>
+                            <Label htmlFor="date">Start Date</Label>
                         <Input
-                            id="value"
-                            type="number"
-                            placeholder="0.00"
+                                id="start_date"
+                                type="date"
                             className="bg-background"
                         />
                     </div>
@@ -166,11 +165,24 @@ export default function CreateContractModal({
                     <div className="space-y-2">
                         <Label htmlFor="date">End Date</Label>
                         <Input
-                            id="date"
+                                id="end_date"
                             type="date"
                             className="bg-background"
                         />
                     </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="value">Value ($)</Label>
+                            <Input
+                                id="value"
+                                type="number"
+                                placeholder="0.00"
+                                className="[appearance:textfield] 
+                                    [&::-webkit-outer-spin-button]:appearance-none 
+                                    [&::-webkit-inner-spin-button]:appearance-none
+                                    bg-background"
+                            />
+                        </div>
 
                     <div className="col-span-2 pt-2">
                         <Label>Upload Document (PDF)</Label>
