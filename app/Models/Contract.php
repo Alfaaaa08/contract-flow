@@ -17,6 +17,7 @@ class Contract extends Model {
         'end_date',
         'file_path',
         'status',
+        'start_date',
     ];
 
     public function client(): BelongsTo {
