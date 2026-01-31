@@ -85,6 +85,10 @@ export default function CreateContractModal({
         });
     };
 
+    // Add this to see validation errors
+    console.log("Current errors:", errors);
+    console.log("Is submitting:", isSubmitting);
+
     return (
         <Dialog open={dialogOpen} onOpenChange={onDialogOpenChange}>
             <DialogContent className="sm:max-w-[600px] bg-card border-border">
@@ -125,7 +129,7 @@ export default function CreateContractModal({
                             >
                                 <PopoverTrigger asChild>
                                     <Button
-                                        type="button" 
+                                        type="button"
                                         variant="outline"
                                         role="combobox"
                                         aria-expanded={clientPopoverOpen}
@@ -188,7 +192,10 @@ export default function CreateContractModal({
                         <div className="space-y-2">
                             <Label htmlFor="contract_type_id">Type</Label>
 
-                            <input type="hidden" {...register("contract_type_id")} />
+                            <input
+                                type="hidden"
+                                {...register("contract_type_id")}
+                            />
 
                             <Popover
                                 open={typePopoverOpen}
@@ -200,7 +207,9 @@ export default function CreateContractModal({
                                         role="combobox"
                                         aria-expanded={typePopoverOpen}
                                         className={`w-full justify-between bg-background ${
-                                            errors.contract_type_id ? "border-red-500" : ""
+                                            errors.contract_type_id
+                                                ? "border-red-500"
+                                                : ""
                                         }`}
                                     >
                                         {selectedType || "Select a type"}
@@ -300,6 +309,7 @@ export default function CreateContractModal({
                                     [&::-webkit-outer-spin-button]:appearance-none 
                                     [&::-webkit-inner-spin-button]:appearance-none
                                     bg-background"
+                                {...register("value", { valueAsNumber: true })}
                             />
                         </div>
 
