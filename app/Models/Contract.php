@@ -11,8 +11,8 @@ class Contract extends Model {
 
     protected static function booted(): void {
         static::creating(function ($contract) {
-            // Temporary: hardcode to tenant 2 until Auth is ready 
-            $contract->tenant_id = 2;
+            // Temporary: hardcode to tenant 'contractflow' until Auth is ready 
+            $contract->tenant_id = 'contractflow';
         });
     }
 
