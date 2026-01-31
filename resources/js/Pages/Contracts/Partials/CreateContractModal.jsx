@@ -81,6 +81,9 @@ export default function CreateContractModal({
             onSuccess: () => {
                 reset();
                 onDialogOpenChange(false);
+
+                setSelectedClient(0);
+                setSelectedType(0);
             },
         });
     };
