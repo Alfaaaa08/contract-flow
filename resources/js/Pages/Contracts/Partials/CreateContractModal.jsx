@@ -60,8 +60,8 @@ export default function CreateContractModal({
         reValidateMode: "onChange",
         defaultValues: {
             name: "",
-            client: 0,
-            type: 0,
+            client_id: 0,
+            contract_contract_type_id: 0,
             start_date: "",
             end_date: "",
             value: 0,
@@ -115,9 +115,9 @@ export default function CreateContractModal({
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="client">Client</Label>
+                            <Label htmlFor="client_id">Client</Label>
 
-                            <input type="hidden" {...register("client")} />
+                            <input type="hidden" {...register("client_id")} />
 
                             <Popover
                                 open={clientPopoverOpen}
@@ -125,12 +125,12 @@ export default function CreateContractModal({
                             >
                                 <PopoverTrigger asChild>
                                     <Button
-                                        type="button" // ← Important: prevents form submission
+                                        type="button" 
                                         variant="outline"
                                         role="combobox"
                                         aria-expanded={clientPopoverOpen}
                                         className={`w-full justify-between bg-background ${
-                                            errors.client
+                                            errors.client_id
                                                 ? "border-red-500"
                                                 : ""
                                         }`}
@@ -157,11 +157,11 @@ export default function CreateContractModal({
                                                                     client.name,
                                                                 );
                                                                 setValue(
-                                                                    "client",
+                                                                    "client_id",
                                                                     client.id,
                                                                 );
                                                                 clearErrors(
-                                                                    "client",
+                                                                    "client_id",
                                                                 );
                                                                 setClientPopoverOpen(
                                                                     false,
@@ -178,17 +178,17 @@ export default function CreateContractModal({
                                 </PopoverContent>
                             </Popover>
 
-                            {errors.client && (
+                            {errors.client_id && (
                                 <p className="text-sm text-red-500 mt-1">
-                                    {errors.client.message}
+                                    {errors.client_id.message}
                                 </p>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="type">Type</Label>
+                            <Label htmlFor="contract_type_id">Type</Label>
 
-                            <input type="hidden" {...register("type")} />
+                            <input type="hidden" {...register("contract_type_id")} />
 
                             <Popover
                                 open={typePopoverOpen}
@@ -200,7 +200,7 @@ export default function CreateContractModal({
                                         role="combobox"
                                         aria-expanded={typePopoverOpen}
                                         className={`w-full justify-between bg-background ${
-                                            errors.type ? "border-red-500" : ""
+                                            errors.contract_type_id ? "border-red-500" : ""
                                         }`}
                                     >
                                         {selectedType || "Select a type"}
@@ -225,11 +225,11 @@ export default function CreateContractModal({
                                                                     type.name,
                                                                 );
                                                                 setValue(
-                                                                    "type",
+                                                                    "contract_type_id",
                                                                     type.id,
                                                                 );
                                                                 clearErrors(
-                                                                    "type",
+                                                                    "contract_type_id",
                                                                 );
                                                                 setTypePopoverOpen(
                                                                     false,
@@ -245,9 +245,9 @@ export default function CreateContractModal({
                                     </Command>
                                 </PopoverContent>
                             </Popover>
-                            {errors.type && (
+                            {errors.contract_type_id && (
                                 <p className="text-sm text-red-500 mt-1">
-                                    {errors.type.message}
+                                    {errors.contract_type_id.message}
                                 </p>
                             )}
                         </div>

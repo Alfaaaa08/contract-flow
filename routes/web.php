@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\Central\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,11 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
+
 foreach (config('tenancy.central_domains') as $domain) {
     Route::domain($domain)->group(function () {
         Route::get('/', [WelcomeController::class, 'index']);
 
-        require __DIR__.'/admin.php';
+        require __DIR__ . '/admin.php';
 
         // Central API routes (stateless, no CSRF)
         Route::prefix('api')->withoutMiddleware([
@@ -29,7 +33,7 @@ foreach (config('tenancy.central_domains') as $domain) {
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
         ])->group(function () {
-            require __DIR__.'/api.php';
+            require __DIR__ . '/api.php';
         });
     });
 }
