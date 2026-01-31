@@ -97,7 +97,18 @@ export default function CreateContractModal({
                         Create New Contract
                     </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(onSubmit)} type="submit">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            if (e.target.tagName === "INPUT") {
+                                e.preventDefault();
+                                handleSubmit(e);
+                            }
+                        }
+                    }}
+                    type="submit"
+                >
                     <div className="grid grid-cols-2 gap-4 py-4">
                         <div className="col-span-2 space-y-2">
                             <Label htmlFor="name">Contract Name</Label>
