@@ -88,10 +88,6 @@ export default function CreateContractModal({
         });
     };
 
-    // Add this to see validation errors
-    console.log("Current errors:", errors);
-    console.log("Is submitting:", isSubmitting);
-
     return (
         <Dialog open={dialogOpen} onOpenChange={onDialogOpenChange}>
             <DialogContent className="sm:max-w-[600px] bg-card border-border">

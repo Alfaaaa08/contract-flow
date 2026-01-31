@@ -31,6 +31,7 @@ class Contract extends Model {
         'start_date' => 'date',
         'end_date'   => 'date',
         'value'      => 'decimal:2',
+        'status' => \App\Enums\ContractStatus::class,
     ];
 
     public function client(): BelongsTo {
