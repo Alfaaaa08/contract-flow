@@ -4,12 +4,12 @@ import ContractsToolbar from "@/Pages/Contracts/ContractsToolbar";
 import ContractsTable from "@/Pages/Contracts/ContractsTable";
 import CreateContractModal from "./Partials/CreateContractModal";
 
-export default function Contracts() {
+export default function Contracts({ contracts }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	return (
 		<div className=" px-4 sm:px-6 lg:px-8">
 			<ContractsToolbar onCreate={() => setIsModalOpen(true)}/>
-			<ContractsTable />
+			<ContractsTable contracts={contracts}/>
 			<CreateContractModal dialogOpen={isModalOpen} onDialogOpenChange={setIsModalOpen}/>
 		</div>
 	);

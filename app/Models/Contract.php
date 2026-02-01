@@ -3,11 +3,18 @@
 namespace App\Models;
 
 use App\Traits\BelongsToTenant;
+use \App\Enums\ContractStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Contract extends Model {
     use BelongsToTenant;
+
+    protected $connection = 'pgsql';
+
+    public function getTable() {
+        return 'public.contracts';
+    }
 
     protected static function booted(): void {
         static::creating(function ($contract) {
@@ -31,7 +38,7 @@ class Contract extends Model {
         'start_date' => 'date',
         'end_date'   => 'date',
         'value'      => 'decimal:2',
-        'status' => \App\Enums\ContractStatus::class,
+        'status' => ContractStatus::class,
     ];
 
     public function client(): BelongsTo {
@@ -40,5 +47,19 @@ class Contract extends Model {
 
     public function type(): BelongsTo {
         return $this->belongsTo(ContractType::class, 'contract_type_id');
+    }
+
+    public function getDisplayStatusAttribute() {
+        if ($this->status !== ContractStatus::ACTIVE) {
+            return $this->status->label();
+        }
+
+        $endDate = \Illuminate\Support\Carbon::parse($this->end_date);
+
+        if ($endDate?->isAfter(now()) && $endDate->diffInDays(now(), true) <= 30) {
+            return 'Expiring';
+        }
+
+        return 'Active';
     }
 }

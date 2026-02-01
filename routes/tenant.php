@@ -16,7 +16,7 @@ Route::middleware([
     Route::get('/', fn() => Inertia::render('Tenant/Home'));
 
     Route::get('/dashboard', fn() => Inertia::render('Dashboard/Dashboard'));
-    Route::get('/contracts', fn() => Inertia::render('Contracts/Contracts'));
+    Route::get('/contracts', [App\Http\Controllers\ContractController::class, 'index'])->name('contracts.index');
     Route::get('/clients', fn() => Inertia::render('Clients/Clients'));
     Route::get('/types', fn() => Inertia::render('Types/Types'));
     Route::get('/settings', fn() => Inertia::render('Settings/Settings'));
