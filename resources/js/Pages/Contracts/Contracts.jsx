@@ -5,6 +5,7 @@ import ContractsTable from "@/Pages/Contracts/ContractsTable";
 import CreateContractModal from "./Partials/CreateContractModal";
 
 export default function Contracts({ contracts, filters }) {
+	console.log(filters)
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	return (
 		<div className=" px-4 sm:px-6 lg:px-8">

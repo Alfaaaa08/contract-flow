@@ -6,8 +6,9 @@ import { useInertiaProcessing } from "@/hooks/useInertiaProcessing";
 
 export default function ContractsToolbar({ onCreate, filters }) {
     const [search, setSearch] = useState(filters?.search || "");
+    const [status, setStatus] = useState(filters?.status || "");
     const processing = useInertiaProcessing();
-    const debouncedSearch = useDebounce(search, 200);
+    const debouncedSearch = useDebounce(search, 300);
 
     const isFirstRender = useRef(true);
 
@@ -16,23 +17,35 @@ export default function ContractsToolbar({ onCreate, filters }) {
     }, [filters?.search]);
 
     useEffect(() => {
+        setStatus(filters?.status || "");
+    }, [filters?.status]);
+
+    useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
             return;
         }
 
-        if (debouncedSearch === filters?.search) return;
+        const params = {};
+        if (debouncedSearch) {
+            params.search = debouncedSearch;
+        }
+        if (status) {
+            params.status = status;
+        }
 
         router.get(
             route("contracts.index"),
-            { search: debouncedSearch },
+            { search: debouncedSearch,
+                status: status
+             },
             {
                 preserveState: true,
                 replace: true,
                 preserveScroll: true,
             },
         );
-    }, [debouncedSearch]);
+    }, [debouncedSearch, status]);
 
     return (
         <div className="flex items-center justify-between w-full gap-4 mb-6">
@@ -63,9 +76,11 @@ export default function ContractsToolbar({ onCreate, filters }) {
                 </div>
                 <select
                     id="status"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
                     className="bg-card border border-border rounded-md px-3 py-2 text-sm outline-none cursor-pointer hover:bg-muted/50 transition-colors min-w-[140px] h-[38px]"
                 >
-                    <option>All Statuses</option>
+                    <option value="">All Statuses</option>
                     <option value="1">Draft</option>
                     <option value="2">Active</option>
                     <option value="5">Expiring</option>
