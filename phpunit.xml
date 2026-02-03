@@ -31,5 +31,8 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="TENANCY_CREATE_DATABASE" value="false"/>
+        <env name="TENANCY_DROP_DATABASE" value="false"/>
+        <env name="CENTRAL_DOMAINS" value="localhost"/>
     </php>
 </phpunit>
