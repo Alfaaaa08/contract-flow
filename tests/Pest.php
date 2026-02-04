@@ -16,6 +16,16 @@ uses(
     }
 })->in('Feature', 'Unit');
 
+uses()
+    ->afterEach(function () {
+        $files = glob(database_path('tenant*'));
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+    })->in('Feature');
+
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
