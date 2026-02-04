@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
-class Tenant extends BaseTenant implements TenantWithDatabase
-{
-    use HasDatabase, HasDomains;
+class Tenant extends BaseTenant implements TenantWithDatabase {
+    use HasDatabase, HasDomains, HasFactory;
 
     /**
      * Custom columns that are not stored in the data JSON column.
      *
      * @return array<string>
      */
-    public static function getCustomColumns(): array
-    {
+    public static function getCustomColumns(): array {
         return [
             'id',
             'name',
@@ -46,8 +45,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
+    protected function casts(): array {
         return [
             'is_active' => 'boolean',
         ];
@@ -56,34 +54,34 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     /**
      * Get the tenant's primary domain.
      */
-    protected function primaryDomain(): Attribute
-    {
+    protected function primaryDomain(): Attribute {
         return Attribute::make(
-            get: fn () => $this->domains->first()?->domain,
+            get: fn() => $this->domains->first()?->domain,
         );
     }
 
     /**
      * Scope a query to only include active tenants.
      */
-    public function scopeActive($query)
-    {
+    public function scopeActive($query) {
         return $query->where('is_active', true);
     }
 
     /**
      * Scope a query to only include inactive tenants.
      */
-    public function scopeInactive($query)
-    {
+    public function scopeInactive($query) {
         return $query->where('is_active', false);
     }
 
     /**
      * Check if the tenant is active.
      */
-    public function isActive(): bool
-    {
+    public function isActive(): bool {
         return $this->is_active === true;
+    }
+
+    public function getConnectionName() {
+        return config('database.default');
     }
 }
