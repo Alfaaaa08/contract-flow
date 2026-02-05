@@ -42,45 +42,44 @@ const items = [
 
 export default function AppSidebar() {
     return (
-        <div className="flex h-screen">
-            <Sidebar className="border-r bg-muted/40">
-                <SidebarHeader className="px-4 py-6">
-                    <h1 className="text-lg font-semibold tracking-tight">
+        <Sidebar collapsible="icon" className="border-r">
+            <SidebarHeader>
+                <div className="flex items-center gap-2 px-4 py-6 group-data-[collapsible=icon]:justify-center">
+                    <h1 className="text-lg font-semibold tracking-tight truncate group-data-[collapsible=icon]:hidden">
                         ContractFlow
                     </h1>
-                </SidebarHeader>
-                <SidebarContent >
-                    <SidebarGroup>
-                        <SidebarGroupContent>
-                            <SidebarMenu>
-                                {items.map((item) => (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton asChild>
-                                            <Link
-                                                href={item.url}
-                                                className="text-blue-500 no-blue-link"
-                                            >
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
-                            </SidebarMenu>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                </SidebarContent>
-                <SidebarFooter>
-                    <SidebarMenu>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton>
-                                <LogOut />
-                                <span>Logout</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    </SidebarMenu>
-                </SidebarFooter>
-            </Sidebar>
-        </div>
+                </div>
+            </SidebarHeader>
+            
+            <SidebarContent>
+                <SidebarGroup>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {items.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton asChild tooltip={item.title}>
+                                        <Link href={item.url} className="no-blue-link">
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+            </SidebarContent>
+
+            <SidebarFooter>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Logout">
+                            <LogOut />
+                            <span>Logout</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
+        </Sidebar>
     )
 }
