@@ -16,11 +16,4 @@ use Illuminate\Support\Facades\Route;
 | Only admin routes are handled here. User authentication is on tenant domains.
 |
 */
-
-Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
-
-foreach (config('tenancy.central_domains') as $domain) {
-    Route::group(['domain' => 'admin.contractflow.test'], function () {
-        Route::get('/contracts', [ContractController::class, 'index']);
-    });
-}
+Route::get('/', [WelcomeController::class, 'index']);
