@@ -73,7 +73,7 @@ export default function ContractsTable({ contracts }) {
 
             <Table>
                 <TableHeader>
-                    <TableRow>
+                    <TableRow className="hover:bg-muted/0">
                         <TableHead className="w-[250px]">
                             Contract Name
                         </TableHead>
