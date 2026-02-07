@@ -36,10 +36,14 @@ import { useState } from "react";
 
 import { contractsMock } from "@/Pages/Tenant/Mocks/ContractsMock";
 
+import { useFlashMessage } from '@/hooks/useFlashMessage';
+
 export default function CreateContractModal({
     dialogOpen,
     onDialogOpenChange,
 }) {
+    useFlashMessage();
+    
     const [typePopoverOpen, setTypePopoverOpen] = useState(false);
     const [selectedType, setSelectedType] = useState("");
 
@@ -49,7 +53,7 @@ export default function CreateContractModal({
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
         setError,
         reset,
         setValue,

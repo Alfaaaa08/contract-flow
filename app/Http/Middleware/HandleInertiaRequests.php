@@ -40,6 +40,15 @@ class HandleInertiaRequests extends Middleware
                 'name' => config('app.name'),
                 'domain' => config('app.domain'),
             ],
+            'flash' => function () use ($request) {
+                return [
+                    'success' => $request->session()->get('success'),
+                    'error' => $request->session()->get('error'),
+                    'info' => $request->session()->get('info'),
+                    'warning' => $request->session()->get('warning'),
+                    'highlightId' => $request->session()->get('highlightId'),
+                ];
+            },
         ];
 
         // Share tenant data when in tenant context

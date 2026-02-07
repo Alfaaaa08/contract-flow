@@ -55,6 +55,9 @@ class ContractController extends Controller {
     public function store(StoreContractRequest $request) {
         $contract = Contract::create($request->validated());
 
-        return redirect()->back()->with('success', 'Contract created successfully!');
+        return redirect()
+            ->back()
+            ->with('success', "Contract '$contract->name' created successfully!")
+            ->with('highlightId', $contract->id);
     }
 }
