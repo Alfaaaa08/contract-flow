@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreContractRequest;
-use App\Enums\ContractStatus;
 use App\Models\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,5 +58,13 @@ class ContractController extends Controller {
             ->back()
             ->with('success', "Contract '$contract->name' created successfully!")
             ->with('highlightId', $contract->id);
+    }
+
+    public function destroy(Contract $contract) {
+        $contract->delete();
+
+        return redirect()
+            ->back()
+            ->with('success', 'Contract deleted!');
     }
 }

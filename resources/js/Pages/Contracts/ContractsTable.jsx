@@ -31,7 +31,7 @@ const statusStyles = {
     Terminated: "bg-purple-500/10 text-purple-500 border-purple-500/20",
 };
 
-export default function ContractsTable({ contracts }) {
+export default function ContractsTable({ onDelete, contracts }) {
     const { flash } = usePage().props;
     const highlightId = flash?.highlightId;
 
@@ -152,7 +152,10 @@ export default function ContractsTable({ contracts }) {
                                                 />
                                                 Edit
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-500 focus:bg-red-500/20 focus:text-red-500 cursor-pointer">
+                                            <DropdownMenuItem
+                                                onClick={() => onDelete(contract.id)}
+                                                className="text-red-500 focus:bg-red-500/20 focus:text-red-500 cursor-pointer"
+                                            >
                                                 <Trash
                                                     size="icon"
                                                     className="size-8"
