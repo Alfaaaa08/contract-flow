@@ -5,18 +5,12 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/Components/ui/dialog";
+
 import { Label } from "@/Components/ui/label";
+
 import { Input } from "@/Components/ui/input";
-import { UploadCloud } from "lucide-react";
 
 import { Button } from "@/Components/ui/button";
-
-import { ChevronsUpDown } from "lucide-react";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "@inertiajs/react";
-import { contractSchema } from "@/schemas/contractSchema";
 
 import {
     Command,
@@ -26,24 +20,35 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command";
+
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { UploadCloud, ChevronsUpDown } from "lucide-react";
+
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { router } from "@inertiajs/react";
+
+import { contractSchema } from "@/schemas/contractSchema";
+
 import { useState } from "react";
 
 import { contractsMock } from "@/Pages/Tenant/Mocks/ContractsMock";
 
-import { useFlashMessage } from '@/hooks/useFlashMessage';
+import { useFlashMessage } from "@/hooks/useFlashMessage";
 
-export default function CreateContractModal({
+export default function ContractFormModal({
     dialogOpen,
     onDialogOpenChange,
 }) {
     useFlashMessage();
-    
+
     const [typePopoverOpen, setTypePopoverOpen] = useState(false);
     const [selectedType, setSelectedType] = useState("");
 
@@ -65,7 +70,7 @@ export default function CreateContractModal({
         defaultValues: {
             name: "",
             client_id: 0,
-            contract_contract_type_id: 0,
+            contract_type_id: 0,
             start_date: "",
             end_date: "",
             value: 0,
@@ -73,23 +78,23 @@ export default function CreateContractModal({
     });
 
     const onSubmit = async (data) => {
-        router.post("/contracts", data, {
-            onError: (errors) => {
-                Object.keys(errors).forEach((key) => {
-                    setError(key, {
-                        type: "server",
-                        message: errors[key],
+            router.post(route('contracts.store'), data, {
+                onError: (errors) => {
+                    Object.keys(errors).forEach((key) => {
+                        setError(key, {
+                            type: "server",
+                            message: errors[key],
+                        });
                     });
-                });
-            },
-            onSuccess: () => {
-                reset();
-                onDialogOpenChange(false);
-
-                setSelectedClient(0);
-                setSelectedType(0);
-            },
-        });
+                },
+                onSuccess: () => {
+                    reset();
+                    onDialogOpenChange(false);
+    
+                    setSelectedClient(0);
+                    setSelectedType(0);
+                },
+            });
     };
 
     return (
