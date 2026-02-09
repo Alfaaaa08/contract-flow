@@ -25,6 +25,27 @@ const statusStyles = {
  */
 export const getColumns = (onEdit, onDelete) => [
     {
+        id: "select",
+        header: ({ table }) => (
+            <div className="px-1">
+                <Checkbox
+                    checked={table.getIsAllPageRowsSelected()}
+                    onCheckedChange={(value) =>
+                        table.toggleAllPageRowsSelected(!!value)
+                    }
+                />
+            </div>
+        ),
+        cell: ({ row }) => (
+            <div className="px-1">
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                />
+            </div>
+        ),
+    },
+    {
         accessorKey: "name",
         header: "Contract",
         cell: ({ row }) => {

@@ -125,12 +125,19 @@ export default function ContractsTable({ onEdit, onDelete, contracts }) {
                         <TableRow
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
-                            className={`transition-all duration-300 ${
-                                row.original.id === highlightId &&
-                                shouldHighlight
-                                    ? "bg-primary/20"
-                                    : "hover:bg-muted/5"
-                            }`}
+                            className={`
+                                transition-all duration-300 border-b border-border/50
+                                /* Fix the Selected State brightness */
+                                data-[state=selected]:bg-primary/10 
+                                data-[state=selected]:hover:bg-primary/20
+                                
+                                /* Keep your highlight logic for new/edited rows */
+                                ${
+                                    row.original.id === highlightId && shouldHighlight
+                                        ? "bg-primary/20 ring-1 ring-inset ring-primary/50"
+                                        : "hover:bg-muted/5"
+                                }
+                            `}
                         >
                             {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id}>
