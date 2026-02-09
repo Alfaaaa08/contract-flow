@@ -20,6 +20,7 @@ Route::middleware([
     
     Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.index');
     Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
+    Route::put('/contracts/{contract}', [ContractController::class, 'update'])->name('contracts.update');
     Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
 
     Route::get('/clients', fn() => Inertia::render('Clients/Clients'));

@@ -37,7 +37,7 @@ import { router } from "@inertiajs/react";
 
 import { contractSchema } from "@/schemas/contractSchema";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { contractsMock } from "@/Pages/Tenant/Mocks/ContractsMock";
 
@@ -46,8 +46,21 @@ import { useFlashMessage } from "@/hooks/useFlashMessage";
 export default function ContractFormModal({
     dialogOpen,
     onDialogOpenChange,
+    contract,
 }) {
     useFlashMessage();
+
+    const isEditing = !!contract;
+
+    const formatDateForInput = (dateString) => {
+        if (!dateString) {
+            return "";
+        }
+
+        const [day, month, year] = dateString.split("/");
+
+        return `${year}-${month}-${day}`;
+    };
 
     const [typePopoverOpen, setTypePopoverOpen] = useState(false);
     const [selectedType, setSelectedType] = useState("");
@@ -77,8 +90,44 @@ export default function ContractFormModal({
         },
     });
 
+    useEffect(() => {
+        if (contract && dialogOpen) {
+            const clientName =
+                contractsMock.clients.find((c) => c.id === contract.client_id)
+                    ?.name || "";
+            const typeName =
+                contractsMock.types.find((t) => t.id === contract.type_id)
+                    ?.name || "";
+
+            setSelectedClient(clientName);
+            setSelectedType(typeName);
+
+            reset({
+                id: contract.id,
+                name: contract.name,
+                client_id: contract.client_id,
+                contract_type_id: contract.type_id,
+                start_date: formatDateForInput(contract.start_date) || "",
+                end_date: formatDateForInput(contract.end_date) || "",
+                value: contract.value || 0,
+                status: contract.status || 1,
+            });
+        }
+        if (!dialogOpen) {
+            reset({
+                name: "",
+                client_id: 0,
+                contract_type_id: 0,
+                start_date: "",
+                end_date: "",
+                value: 0,
+            });
+        }
+    }, [contract, dialogOpen, reset]);
+
     const onSubmit = async (data) => {
-            router.post(route('contracts.store'), data, {
+        if (!isEditing) {
+            router.post(route("contracts.store"), data, {
                 onError: (errors) => {
                     Object.keys(errors).forEach((key) => {
                         setError(key, {
@@ -90,11 +139,28 @@ export default function ContractFormModal({
                 onSuccess: () => {
                     reset();
                     onDialogOpenChange(false);
-    
+
                     setSelectedClient(0);
                     setSelectedType(0);
                 },
             });
+
+            return;
+        }
+
+        router.put(route(`contracts.update`, contract.id), data, {
+            onSuccess: () => {
+                onDialogOpenChange(false);
+            },
+            onError: (serverErrors) => {
+                Object.keys(serverErrors).forEach((key) => {
+                    setError(key, {
+                        type: "server",
+                        message: serverErrors[key],
+                    });
+                });
+            },
+        });
     };
 
     return (
@@ -102,7 +168,7 @@ export default function ContractFormModal({
             <DialogContent className="sm:max-w-[600px] bg-card border-border">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-bold text-foreground">
-                        Create New Contract
+                        {isEditing ? "Edit Contract" : "Create Contract"}
                     </DialogTitle>
                 </DialogHeader>
                 <form

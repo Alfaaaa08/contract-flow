@@ -35,14 +35,17 @@ class ContractController extends Controller {
             ->latest()
             ->get()
             ->map(fn($contract) => [
-                'id'        => $contract->id,
-                'name'      => $contract->name,
-                'client'    => $contract->client->name,
-                'type'      => $contract->type->name,
-                'type_icon' => $contract->type->icon,
-                'value'     => $contract->value ?: 0,
-                'status'    => $contract->display_status,
-                'end_date'  => $contract->end_date->format('d/m/Y'),
+                'id'         => $contract->id,
+                'name'       => $contract->name,
+                'client_id'  => $contract->client->id,
+                'client'     => $contract->client->name,
+                'type_id'    => $contract->type->id,
+                'type'       => $contract->type->name,
+                'type_icon'  => $contract->type->icon,
+                'value'      => $contract->value ?: 0,
+                'status'     => $contract->display_status,
+                'start_date' => $contract->start_date ? $contract->start_date->format('d/m/Y') : '',
+                'end_date'   => $contract->end_date->format('d/m/Y'),
             ]);
 
 
@@ -58,6 +61,12 @@ class ContractController extends Controller {
             ->back()
             ->with('success', "Contract '$contract->name' created successfully!")
             ->with('highlightId', $contract->id);
+    }
+
+    public function update(StoreContractRequest $request, Contract $contract) {
+        $contract->update($request->validated());
+
+        return redirect()->back()->with('success', 'Contract updated successfully!');
     }
 
     public function destroy(Contract $contract) {

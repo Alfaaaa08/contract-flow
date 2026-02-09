@@ -31,7 +31,7 @@ const statusStyles = {
     Terminated: "bg-purple-500/10 text-purple-500 border-purple-500/20",
 };
 
-export default function ContractsTable({ onDelete, contracts }) {
+export default function ContractsTable({ onEdit, onDelete, contracts }) {
     const { flash } = usePage().props;
     const highlightId = flash?.highlightId;
 
@@ -145,7 +145,10 @@ export default function ContractsTable({ onDelete, contracts }) {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem className="focus:bg-muted/20 focus:text-foreground">
+                                            <DropdownMenuItem
+                                                onClick={() => onEdit(contract)}
+                                                className="focus:bg-muted/20 focus:text-foreground"
+                                            >
                                                 <Pencil
                                                     size="icon"
                                                     className="size-8"
@@ -153,7 +156,9 @@ export default function ContractsTable({ onDelete, contracts }) {
                                                 Edit
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
-                                                onClick={() => onDelete(contract.id)}
+                                                onClick={() =>
+                                                    onDelete(contract.id)
+                                                }
                                                 className="text-red-500 focus:bg-red-500/20 focus:text-red-500 cursor-pointer"
                                             >
                                                 <Trash
