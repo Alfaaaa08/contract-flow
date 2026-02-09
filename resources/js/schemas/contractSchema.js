@@ -6,8 +6,8 @@ export const contractSchema = z
             .string()
             .min(1, "Contract name is required")
             .max(255, "Contract name must not exceed 255 characters"),
-        client_id: z.int().min(1, "Client is required"),
-        contract_type_id: z.int().min(1, "Type is required"),
+        client_id: z.coerce.number().int().min(1, "Client is required"),
+        contract_type_id: z.coerce.number().int().min(1, "Type is required"),
         start_date: z.string(),
         end_date: z.string().min(1, "End date is required"),
         value: z.number().min(0, "Value is required"),
