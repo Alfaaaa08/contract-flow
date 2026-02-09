@@ -15,13 +15,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import DynamicIcon from "./DynamicTypeIcon";
+
 import { Button } from "@/components/ui/button";
+
 import { MoreHorizontalIcon, Trash, Pencil, Loader2 } from "lucide-react";
+
 import { useInertiaProcessing } from "@/hooks/useInertiaProcessing";
 
 import { usePage } from "@inertiajs/react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+
+import { getColumns } from "./Partials/Columns";
+
+import {
+    useReactTable,
+    getCoreRowModel,
+    flexRender,
+} from "@tanstack/react-table";
 
 const statusStyles = {
     Active: "bg-primary/10 text-primary border-primary/20",
@@ -33,11 +44,28 @@ const statusStyles = {
 
 export default function ContractsTable({ onEdit, onDelete, contracts }) {
     const { flash } = usePage().props;
+
     const highlightId = flash?.highlightId;
 
     const processing = useInertiaProcessing();
 
+    const [rowSelection, setRowSelection] = useState({});
     const [shouldHighlight, setShouldHighlight] = useState(false);
+
+    const columns = useMemo(
+        () => getColumns(onEdit, onDelete),
+        [onEdit, onDelete],
+    );
+
+    const table = useReactTable({
+        data: contracts,
+        columns,
+        state: { rowSelection },
+        onRowSelectionChange: setRowSelection,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    const selectedRows = table.getSelectedRowModel().rows;
 
     useEffect(() => {
         if (!highlightId) {
@@ -73,106 +101,47 @@ export default function ContractsTable({ onEdit, onDelete, contracts }) {
 
             <Table>
                 <TableHeader>
-                    <TableRow className="hover:bg-muted/0">
-                        <TableHead className="w-[250px]">
-                            Contract Name
-                        </TableHead>
-                        <TableHead>Client</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Value</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>End Date</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow
+                            key={headerGroup.id}
+                            className="hover:bg-transparent border-b border-border"
+                        >
+                            {headerGroup.headers.map((header) => (
+                                <TableHead
+                                    key={header.id}
+                                    className="text-muted-foreground font-semibold py-3"
+                                >
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext(),
+                                    )}
+                                </TableHead>
+                            ))}
+                        </TableRow>
+                    ))}
                 </TableHeader>
                 <TableBody className={processing ? "opacity-50" : ""}>
-                    {contracts.map((contract) => {
-                        const isThisRowNew =
-                            shouldHighlight && highlightId === contract.id;
-
-                        return (
-                            <TableRow
-                                key={contract.id}
-                                className={`
-                                border rounded-lg p-4 transition-all duration-1000 ease-in-out
-                                ${
-                                    isThisRowNew
-                                        ? "bg-primary/50 scale-[1.00] shadow-inner ring-1 ring-inset ring-primary/100"
-                                        : "bg-transparent hover:bg-muted/10"
-                                }
-                            `}
-                            >
-                                <TableCell className="font-medium">
-                                    <div className="flex items-center gap-3">
-                                        <DynamicIcon
-                                            name={contract.type_icon}
-                                            className={`h-4 w-4 ${statusStyles[contract.status]?.split(" ")[1]}`}
-                                        />
-                                        <span>{contract.name}</span>
-                                    </div>
+                    {table.getRowModel().rows.map((row) => (
+                        <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && "selected"}
+                            className={`transition-all duration-300 ${
+                                row.original.id === highlightId &&
+                                shouldHighlight
+                                    ? "bg-primary/20"
+                                    : "hover:bg-muted/5"
+                            }`}
+                        >
+                            {row.getVisibleCells().map((cell) => (
+                                <TableCell key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext(),
+                                    )}
                                 </TableCell>
-                                <TableCell>{contract.client}</TableCell>
-                                <TableCell>
-                                    <span className="text-xs text-muted-foreground bg-background px-2 py-1 rounded border border-border">
-                                        {contract.type}
-                                    </span>
-                                </TableCell>
-                                <TableCell>
-                                    ${contract.value.toLocaleString()}
-                                </TableCell>
-                                <TableCell>
-                                    <div
-                                        className={`inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold border ${statusStyles[contract.status]}`}
-                                    >
-                                        {contract.status}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-muted-foreground">
-                                    {contract.end_date}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="size-8"
-                                            >
-                                                <MoreHorizontalIcon />
-                                                <span className="sr-only">
-                                                    Open menu
-                                                </span>
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem
-                                                onClick={() => onEdit(contract)}
-                                                className="focus:bg-muted/20 focus:text-foreground"
-                                            >
-                                                <Pencil
-                                                    size="icon"
-                                                    className="size-8"
-                                                />
-                                                Edit
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                onClick={() =>
-                                                    onDelete(contract.id)
-                                                }
-                                                className="text-red-500 focus:bg-red-500/20 focus:text-red-500 cursor-pointer"
-                                            >
-                                                <Trash
-                                                    size="icon"
-                                                    className="size-8"
-                                                />
-                                                Delete
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
+                            ))}
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </div>
