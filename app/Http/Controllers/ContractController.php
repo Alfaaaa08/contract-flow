@@ -74,6 +74,6 @@ class ContractController extends Controller {
 
         return redirect()
             ->back()
-            ->with('success', 'Contract deleted!');
+            ->with('success', 'Contract deleted successfully!');
     }
 }
