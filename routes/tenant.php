@@ -22,7 +22,8 @@ Route::middleware([
     Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
     Route::put('/contracts/{contract}', [ContractController::class, 'update'])->name('contracts.update');
     Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
-
+    Route::delete('/contracts/bulk-destroy', [ContractController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
+    
     Route::get('/clients', fn() => Inertia::render('Clients/Clients'));
     Route::get('/types', fn() => Inertia::render('Types/Types'));
     Route::get('/settings', fn() => Inertia::render('Settings/Settings'));

@@ -76,4 +76,15 @@ class ContractController extends Controller {
             ->back()
             ->with('success', 'Contract deleted successfully!');
     }
+
+    public function bulkDestroy(Request $request) {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:contracts,id',
+        ]);
+
+        Contract::whereIn('id', $validated['ids'])->delete();
+
+        return redirect()->back()->with('success', 'Contracts deleted successfully.');
+    }
 }
