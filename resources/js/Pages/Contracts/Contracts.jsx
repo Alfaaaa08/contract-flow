@@ -6,8 +6,11 @@ import ContractFormModal from "./Partials/ContractFormModal";
 import ContractDeleteDialog from "./Partials/ContractDeleteDialog";
 export default function Contracts({ contracts, filters }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [contractIdToDelete, setContractIdToDelete] = useState(null);
     const [selectedContract, setSelectedContract] = useState(null);
+
+    const [idsToDelete, setIdsToDelete] = useState([]);
+
+    const isDeleteDialogOpen = idsToDelete.length > 0;
 
     const handleCreate = () => {
         setSelectedContract(null);
@@ -25,23 +28,29 @@ export default function Contracts({ contracts, filters }) {
 
             <ContractsTable
                 onEdit={handleEdit}
-                onDelete={(id) => setContractIdToDelete(id)}
+                onDelete={(id) => setIdsToDelete([id])}
+                onBulkDelete={(ids) => setIdsToDelete(ids)}
                 contracts={contracts}
             />
 
             <ContractFormModal
                 dialogOpen={isModalOpen}
-				contract={selectedContract}
-				onDialogOpenChange={(open) => {
+                contract={selectedContract}
+                onDialogOpenChange={(open) => {
                     setIsModalOpen(open);
                     if (!open) setSelectedContract(null);
                 }}
             />
 
             <ContractDeleteDialog
-                contractId={contractIdToDelete}
-                deleteDialogOpen={!!contractIdToDelete}
-                onDeleteDialogOpenChange={setContractIdToDelete}
+                selectedIds={idsToDelete}
+                deleteDialogOpen={isDeleteDialogOpen}
+                onDeleteDialogOpenChange={(open) => {
+                    if (!open) setIdsToDelete([]);
+                }}
+                onSuccess={() => {
+                    setIdsToDelete([]);
+                }}
             />
         </div>
     );

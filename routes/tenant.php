@@ -20,9 +20,9 @@ Route::middleware([
     
     Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.index');
     Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
+    Route::delete('/contracts/bulk-destroy', [ContractController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
     Route::put('/contracts/{contract}', [ContractController::class, 'update'])->name('contracts.update');
     Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
-    Route::delete('/contracts/bulk-destroy', [ContractController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
     
     Route::get('/clients', fn() => Inertia::render('Clients/Clients'));
     Route::get('/types', fn() => Inertia::render('Types/Types'));

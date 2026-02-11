@@ -2,23 +2,15 @@ import {
     Table,
     TableBody,
     TableCell,
+    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import DynamicIcon from "./DynamicTypeIcon";
-
 import { Button } from "@/components/ui/button";
 
-import { MoreHorizontalIcon, Trash, Pencil, Loader2 } from "lucide-react";
+import { Trash, Loader2 } from "lucide-react";
 
 import { useInertiaProcessing } from "@/hooks/useInertiaProcessing";
 
@@ -34,15 +26,7 @@ import {
     flexRender,
 } from "@tanstack/react-table";
 
-const statusStyles = {
-    Active: "bg-primary/10 text-primary border-primary/20",
-    Draft: "bg-muted/10 text-muted-foreground border-border",
-    Expiring: "bg-chart text-chart-4 border-chart-4/20",
-    Expired: "bg-destructive/10 text-destructive border-destructive/20",
-    Terminated: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-};
-
-export default function ContractsTable({ onEdit, onDelete, contracts }) {
+export default function ContractsTable({ onEdit, onDelete, onBulkDelete, contracts }) {
     const { flash } = usePage().props;
 
     const highlightId = flash?.highlightId;
@@ -56,6 +40,10 @@ export default function ContractsTable({ onEdit, onDelete, contracts }) {
         () => getColumns(onEdit, onDelete),
         [onEdit, onDelete],
     );
+    
+    useEffect(() => {
+        setRowSelection({});
+    }, [contracts]);
 
     const table = useReactTable({
         data: contracts,
@@ -133,7 +121,8 @@ export default function ContractsTable({ onEdit, onDelete, contracts }) {
                                 
                                 /* Keep your highlight logic for new/edited rows */
                                 ${
-                                    row.original.id === highlightId && shouldHighlight
+                                    row.original.id === highlightId &&
+                                    shouldHighlight
                                         ? "bg-primary/20 ring-1 ring-inset ring-primary/50"
                                         : "hover:bg-muted/5"
                                 }
@@ -150,6 +139,52 @@ export default function ContractsTable({ onEdit, onDelete, contracts }) {
                         </TableRow>
                     ))}
                 </TableBody>
+                {selectedRows.length > 0 && (
+                    <TableFooter className="bg-muted/10 border-t border-border animate-in fade-in slide-in-from-bottom-2">
+                        <TableRow className="hover:bg-transparent">
+                            <TableCell colSpan={columns.length} className="p-0">
+                                <div className="flex items-center justify-between px-6 py-3 h-14 w-full">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-semibold text-foreground">
+                                            {selectedRows.length} contracts
+                                            selected
+                                        </span>
+                                        <Button
+                                            variant="link"
+                                            size="sm"
+                                            onClick={() =>
+                                                table.resetRowSelection()
+                                            }
+                                            className="text-xs text-muted-foreground hover:text-foreground p-0 h-auto"
+                                        >
+                                            Clear selection
+                                        </Button>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() => onBulkDelete(selectedRows.map(r => r.original.id))}
+                                            size="sm"
+                                            className="h-9 px-4 gap-2 font-bold shadow-sm"
+                                        >
+                                            <Trash className="h-4 w-4" />
+                                            Delete Selected
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() =>
+                                                table.resetRowSelection()
+                                            }
+                                            className="h-9 w-9 border border-border"
+                                        ></Button>
+                                    </div>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    </TableFooter>
+                )}
             </Table>
         </div>
     );

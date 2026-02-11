@@ -12,30 +12,23 @@ import {
 import { router } from "@inertiajs/react";
 
 export default function ContractDeleteDialog({
-    contractId,
+    selectedIds = [],
     deleteDialogOpen,
     onDeleteDialogOpenChange,
+    onSuccess,
 }) {
-    const handleDelete = () => {
-        if (!contractId) {
-            return;
-        }
+    const isMultiple = selectedIds.length > 1;
 
-        router.delete(`/contracts/${contractId}`, {
-            onError: (errors) => {
-                Object.keys(errors).forEach((key) => {
-                    setError(key, {
-                        type: "server",
-                        message: errors[key],
-                    });
-                });
-            },
+    const handleDelete = () => {
+        if (selectedIds.length === 0) return;
+
+        router.delete(route("contracts.bulk-destroy"), {
+            data: { ids: selectedIds },
             onSuccess: () => {
-				onDeleteDialogOpenChange(false);
+                onDeleteDialogOpenChange(false);
+                if (onSuccess) onSuccess();
             },
         });
-
-        onDeleteDialogOpenChange(false);
     };
 
     return (
@@ -47,8 +40,8 @@ export default function ContractDeleteDialog({
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete the contract.
+                        This action cannot be undone. This will permanently delete 
+                        {isMultiple ? ` the ${selectedIds.length} selected contracts.` : " the contract."}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
