@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreContractRequest;
 use App\Models\Contract;
+use App\Models\ContractType;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -51,7 +53,9 @@ class ContractController extends Controller {
 
         return inertia('Contracts/Contracts', [
             'contracts' => $contracts,
-            'filters'   => $request->only(['search', 'status'])
+            'filters'   => $request->only(['search', 'status']),
+            'clients'   => Client::select('id', 'name')->orderBy('name')->get(),
+            'types'     => ContractType::select('id', 'name', 'icon')->orderBy('name')->get()
         ]);
     }
     public function store(StoreContractRequest $request) {
