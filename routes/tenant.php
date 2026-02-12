@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Central\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -16,7 +17,7 @@ Route::middleware([
 
     Route::get('/', fn() => Inertia::render('Tenant/Home'));
 
-    Route::get('/dashboard', fn() => Inertia::render('Dashboard/Dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     
     Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.index');
     Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');

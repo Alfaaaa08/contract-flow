@@ -4,41 +4,34 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Central;
 
+use App\Models\Contract;
+use App\Models\Client;
 use App\Http\Controllers\Controller;
-use App\Models\Tenant;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class DashboardController extends Controller
-{
-    /**
-     * Display the central dashboard with tenant statistics.
-     */
-    public function index(): Response
-    {
-        $totalTenants = Tenant::count();
-        $activeTenants = Tenant::where('is_active', true)->count();
-        $inactiveTenants = $totalTenants - $activeTenants;
+class DashboardController extends Controller {
+    public function index(): Response {
+        $activeContractsCount = Contract::where('status', 2)->count();
 
-        $recentTenants = Tenant::with('domains')
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(fn (Tenant $tenant) => [
-                'id' => $tenant->id,
-                'name' => $tenant->name,
-                'domain' => $tenant->domains->first()?->domain,
-                'is_active' => $tenant->is_active,
-                'created_at' => $tenant->created_at->format('M d, Y'),
-            ]);
+        $expiringSoonCount = Contract::where('status', 2)
+            ->whereNotNull('end_date')
+            ->whereBetween('end_date', [now(), now()->addDays(30)])
+            ->count();
 
-        return Inertia::render('Central/Dashboard', [
+        $totalValue = Contract::where('status', 2)->sum('value');
+
+        $activeClientsCount = Client::whereHas('contracts', function ($query) {
+            $query->where('status', 2);
+        })->count();
+
+        return Inertia::render('Dashboard/Dashboard', [
             'stats' => [
-                'total' => $totalTenants,
-                'active' => $activeTenants,
-                'inactive' => $inactiveTenants,
-            ],
-            'recentTenants' => $recentTenants,
+                'activeContracts' => $activeContractsCount,
+                'expiringSoon'    => $expiringSoonCount,
+                'totalValue'      => $totalValue,
+                'activeClients'   => $activeClientsCount,
+            ]
         ]);
     }
 }
