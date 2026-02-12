@@ -1,7 +1,5 @@
 import TenantLayout from "@/Layouts/TenantLayout";
 
-import { dashboardMock } from "../Tenant/Mocks/DashboardMock";
-
 import {
     StatsCards,
     ContractsOverviewTable,
@@ -9,34 +7,34 @@ import {
     ActivityFeed,
 } from "@/Components/ui";
 
-export default function Dashboard() {
+export default function Dashboard({stats}) {
     return (
         <div className="flex flex-1 flex-col">
-            <div className="p-41 md:p-8">
+            <div className="p-4 md:p-8">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <StatsCards
                         title="Active Contracts"
-                        value={dashboardMock.cards.activeContracts}
+                        value={stats.activeContracts}
                         description="Currently in force"
                     />
                     <StatsCards
                         title="Contracts Expiring Soon"
-                        value={dashboardMock.cards.expiring30Days}
+                        value={stats.expiringSoon}
                         description="Requires attention"
                     />
                     <StatsCards
                         title="Total Contract Value (TCV)"
-                        value={dashboardMock.cards.totalContractValue}
+                        value={stats.totalValue}
                         description="Across all active contracts"
                     />
                     <StatsCards
                         title="Clients with Active Contracts"
-                        value={dashboardMock.cards.clientsWithActiveContracts}
+                        value={stats.activeClients}
                         description="Engaged clients"
                     />
                 </div>
             </div>
-            <div className="p-41 md:p-8">
+            <div className="p-4 md:p-8">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <div className="lg:col-span-8 xl:col-span-9 bg-card border border-border rounded-lg shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-border flex justify-between items-center">
