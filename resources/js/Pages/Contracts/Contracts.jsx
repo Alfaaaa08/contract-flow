@@ -4,7 +4,8 @@ import ContractsToolbar from "@/Pages/Contracts/ContractsToolbar";
 import ContractsTable from "@/Pages/Contracts/ContractsTable";
 import ContractFormModal from "./Partials/ContractFormModal";
 import ContractDeleteDialog from "./Partials/ContractDeleteDialog";
-export default function Contracts({ contracts, filters }) {
+export default function Contracts({ contracts, filters, clients, types }) {
+    console.log(clients, types);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedContract, setSelectedContract] = useState(null);
 
@@ -40,6 +41,8 @@ export default function Contracts({ contracts, filters }) {
                     setIsModalOpen(open);
                     if (!open) setSelectedContract(null);
                 }}
+                clients={clients}
+                types={types}
             />
 
             <ContractDeleteDialog

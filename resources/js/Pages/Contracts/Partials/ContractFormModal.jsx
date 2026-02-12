@@ -39,14 +39,14 @@ import { contractSchema } from "@/schemas/contractSchema";
 
 import { useState, useEffect } from "react";
 
-import { contractsMock } from "@/Pages/Tenant/Mocks/ContractsMock";
-
 import { useFlashMessage } from "@/hooks/useFlashMessage";
 
 export default function ContractFormModal({
     dialogOpen,
-    onDialogOpenChange,
     contract,
+    onDialogOpenChange,
+    clients,
+    types,
 }) {
     useFlashMessage();
 
@@ -93,10 +93,10 @@ export default function ContractFormModal({
     useEffect(() => {
         if (contract && dialogOpen) {
             const clientName =
-                contractsMock.clients.find((c) => c.id === contract.client_id)
+                clients.find((c) => c.id === contract.client_id)
                     ?.name || "";
             const typeName =
-                contractsMock.types.find((t) => t.id === contract.type_id)
+                types.find((t) => t.id === contract.type_id)
                     ?.name || "";
 
             setSelectedClient(clientName);
@@ -236,7 +236,7 @@ export default function ContractFormModal({
                                                 No client found.
                                             </CommandEmpty>
                                             <CommandGroup>
-                                                {contractsMock.clients.map(
+                                                {clients.map(
                                                     (client) => (
                                                         <CommandItem
                                                             key={client.id}
@@ -309,7 +309,7 @@ export default function ContractFormModal({
                                                 No types found.
                                             </CommandEmpty>
                                             <CommandGroup>
-                                                {contractsMock.types.map(
+                                                {types.map(
                                                     (type) => (
                                                         <CommandItem
                                                             key={type.id}
