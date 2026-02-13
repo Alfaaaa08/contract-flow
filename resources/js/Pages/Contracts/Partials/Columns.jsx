@@ -9,14 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import { Pencil, Trash } from "lucide-react";
-
-const statusStyles = {
-    Active: "bg-primary/10 text-primary border-primary/20",
-    Draft: "bg-muted/10 text-muted-foreground border-border",
-    Expiring: "bg-chart-4/10 text-chart-4 border-chart-4/20",
-    Expired: "bg-destructive/10 text-destructive border-destructive/20",
-    Terminated: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-};
+import { STATUS_STYLES } from "@/Constants/contracts";
 
 /**
  * Returns the column definitions for the TanStack Table.
@@ -54,7 +47,7 @@ export const getColumns = (onEdit, onDelete) => [
                 <div className="flex items-center gap-3 min-w-[200px]">
                     <DynamicIcon
                         name={contract.type_icon}
-                        className={`h-4 w-4 ${statusStyles[contract.status]?.split(" ")[1]}`}
+                        className={`h-4 w-4 ${STATUS_STYLES[contract.status]?.split(" ")[1]}`}
                     />
                     <span>{contract.name}</span>
                 </div>
@@ -96,7 +89,7 @@ export const getColumns = (onEdit, onDelete) => [
             const status = row.getValue("status");
             return (
                 <div
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusStyles[status]}`}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_STYLES[status]}`}
                 >
                     {status}
                 </div>
