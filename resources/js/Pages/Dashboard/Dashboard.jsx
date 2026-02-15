@@ -1,12 +1,10 @@
 import TenantLayout from "@/Layouts/TenantLayout";
 
-import {
-    StatsCards,
-    ExpirationSummary,
-    ActivityFeed,
-} from "@/Components/ui";
+import { StatsCards, ExpirationSummary, ActivityFeed } from "@/Components/ui";
 
 import ContractsTable from "@/Pages/Contracts/ContractsTable";
+
+import { Link } from "@inertiajs/react";
 
 export default function Dashboard({ stats, recentContracts }) {
     return (
@@ -43,7 +41,12 @@ export default function Dashboard({ stats, recentContracts }) {
                                 Recent Contracts
                             </h2>
                             <button className="text-sm text-primary hover:opacity-80 transition-opacity no-blue-link">
-                                View all
+                                <Link
+                                    href="/contracts"
+                                    className="no-blue-link"
+                                >
+                                    <span>View All</span>
+                                </Link>
                             </button>
                         </div>
 
