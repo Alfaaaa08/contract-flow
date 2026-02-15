@@ -78,4 +78,20 @@ class Contract extends Model {
 
         return 'Active';
     }
+
+    public function getProgressAttribute(): int {
+        if (!$this->start_date || !$this->end_date) {
+            return 0;
+        }
+
+        $totalDays = $this->start_date->diffInDays($this->end_date);
+
+        if ($totalDays <= 0) return 100;
+
+        $elapsedDays = $this->start_date->diffInDays(now());
+
+        $percentage = ($elapsedDays / $totalDays) * 100;
+
+        return (int) max(0, min(100, $percentage));
+    }
 }

@@ -9,132 +9,156 @@ import {
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import { Pencil, Trash } from "lucide-react";
+import { Progress } from "@/components/ui/progress"
 import { STATUS_STYLES } from "@/Constants/contracts";
 
 /**
  * Returns the column definitions for the TanStack Table.
  * @param {Function} onEdit - Callback when the edit button is clicked
  * @param {Function} onDelete - Callback when the delete button is clicked
+ * @param {Boolean} bIsDashboard = Identify if the table with the columns are being place are from the dashboard, adding the progrees column and removing the types, end date and actions one.
  */
-export const getColumns = (onEdit, onDelete) => [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <div className="px-1">
-                <Checkbox
-                    checked={table.getIsAllPageRowsSelected()}
-                    onCheckedChange={(value) =>
-                        table.toggleAllPageRowsSelected(!!value)
-                    }
-                />
-            </div>
-        ),
-        cell: ({ row }) => (
-            <div className="px-1">
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                />
-            </div>
-        ),
-    },
-    {
-        accessorKey: "name",
-        header: "Contract",
-        cell: ({ row }) => {
-            const contract = row.original;
-            return (
-                <div className="flex items-center gap-3 min-w-[200px]">
-                    <DynamicIcon
-                        name={contract.type_icon}
-                        className={`h-4 w-4 ${STATUS_STYLES[contract.status]?.split(" ")[1]}`}
+export const getColumns = (onEdit, onDelete, bIsDashboard = false) => {
+    const columns = [
+        {
+            id: "select",
+            hideOnDashboard: true,
+            header: ({ table }) => (
+                <div className="px-1">
+                    <Checkbox
+                        checked={table.getIsAllPageRowsSelected()}
+                        onCheckedChange={(value) =>
+                            table.toggleAllPageRowsSelected(!!value)
+                        }
                     />
-                    <span>{contract.name}</span>
                 </div>
-            );
+            ),
+            cell: ({ row }) => (
+                <div className="px-1">
+                    <Checkbox
+                        checked={row.getIsSelected()}
+                        onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    />
+                </div>
+            ),
         },
-    },
-    {
-        accessorKey: "client",
-        header: "Client",
-    },
-    {
-        accessorKey: "type",
-        header: "Type",
-        cell: ({ row }) => (
-            <span className="text-[11px] text-muted-foreground bg-background px-2 py-1 rounded border border-border inline-block">
-                {row.getValue("type")}
-            </span>
-        ),
-    },
-    {
-        accessorKey: "value",
-        header: "Value",
-        cell: ({ row }) => {
-            const val = parseFloat(row.getValue("value"));
-            return (
-                <span>
-                    $
-                    {val.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                    })}
+        {
+            accessorKey: "name",
+            header: "Contract",
+            cell: ({ row }) => {
+                const contract = row.original;
+                return (
+                    <div className="flex items-center gap-3 min-w-[200px]">
+                        <DynamicIcon
+                            name={contract.type_icon}
+                            className={`h-4 w-4 ${STATUS_STYLES[contract.status]?.split(" ")[1]}`}
+                        />
+                        <span>{contract.name}</span>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "client",
+            header: "Client",
+        },
+        {
+            accessorKey: "type",
+            hideOnDashboard: true,
+            header: "Type",
+            cell: ({ row }) => (
+                <span className="text-[11px] text-muted-foreground bg-background px-2 py-1 rounded border border-border inline-block">
+                    {row.getValue("type")}
                 </span>
-            );
+            ),
         },
-    },
-    {
-        accessorKey: "status",
-        header: "Status",
-        cell: ({ row }) => {
-            const status = row.getValue("status");
-            return (
-                <div
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_STYLES[status]}`}
-                >
-                    {status}
-                </div>
-            );
+        {
+            accessorKey: "value",
+            header: "Value",
+            cell: ({ row }) => {
+                const val = parseFloat(row.getValue("value"));
+                return (
+                    <span>
+                        $
+                        {val.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                        })}
+                    </span>
+                );
+            },
         },
-    },
-    {
-        accessorKey: "end_date",
-        header: "End Date",
-        cell: ({ row }) => (
-            <span className="text-muted-foreground text-sm">
-                {row.getValue("end_date")}
-            </span>
-        ),
-    },
-    {
-        id: "actions",
-        header: () => <div className="text-right pr-4"></div>,
-        cell: ({ row }) => (
-            <div className="text-right">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        align="end"
-                        className="bg-card border-border"
+        {
+            accessorKey: "status",
+            header: "Status",
+            cell: ({ row }) => {
+                const status = row.getValue("status");
+                return (
+                    <div
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_STYLES[status]}`}
                     >
-                        <DropdownMenuItem
-                            onClick={() => onEdit(row.original)}
-                            className="gap-2 cursor-pointer"
+                        {status}
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "end_date",
+            hideOnDashboard: true,
+            header: "End Date",
+            cell: ({ row }) => (
+                <span className="text-muted-foreground text-sm">
+                    {row.getValue("end_date")}
+                </span>
+            ),
+        },
+        {
+            id: "actions",
+            hideOnDashboard: true,
+            header: () => <div className="text-right pr-4"></div>,
+            cell: ({ row }) => (
+                <div className="text-right">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                            >
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            align="end"
+                            className="bg-card border-border"
                         >
-                            <Pencil className="h-3.5 w-3.5" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => onDelete(row.original.id)}
-                            className="gap-2 text-destructive cursor-pointer focus:text-destructive"
-                        >
-                            <Trash className="h-3.5 w-3.5" /> Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-        ),
-    },
-];
+                            <DropdownMenuItem
+                                onClick={() => onEdit(row.original)}
+                                className="gap-2 cursor-pointer"
+                            >
+                                <Pencil className="h-3.5 w-3.5" /> Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => onDelete(row.original.id)}
+                                className="gap-2 text-destructive cursor-pointer focus:text-destructive"
+                            >
+                                <Trash className="h-3.5 w-3.5" /> Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            ),
+        },
+    ];
+
+    if (bIsDashboard) {
+        columns.push({
+            accessorKey: "progress",
+            header: "Progress",
+            cell: ({ row }) => (
+                <Progress value={row.getValue('progress')} />
+            ),
+        });
+    }
+
+    return columns.filter((column) => !bIsDashboard || !column.hideOnDashboard);
+};
