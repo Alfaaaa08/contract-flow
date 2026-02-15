@@ -26,7 +26,7 @@ import {
     flexRender,
 } from "@tanstack/react-table";
 
-export default function ContractsTable({ onEdit, onDelete, onBulkDelete, contracts }) {
+export default function ContractsTable({ onEdit, onDelete, onBulkDelete, contracts, bIsDashboard = false }) {
     const { flash } = usePage().props;
 
     const highlightId = flash?.highlightId;
@@ -37,7 +37,7 @@ export default function ContractsTable({ onEdit, onDelete, onBulkDelete, contrac
     const [shouldHighlight, setShouldHighlight] = useState(false);
 
     const columns = useMemo(
-        () => getColumns(onEdit, onDelete),
+        () => getColumns(onEdit, onDelete, bIsDashboard),
         [onEdit, onDelete],
     );
     

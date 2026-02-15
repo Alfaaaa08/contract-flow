@@ -2,12 +2,13 @@ import TenantLayout from "@/Layouts/TenantLayout";
 
 import {
     StatsCards,
-    ContractsOverviewTable,
     ExpirationSummary,
     ActivityFeed,
 } from "@/Components/ui";
 
-export default function Dashboard({stats}) {
+import ContractsTable from "@/Pages/Contracts/ContractsTable";
+
+export default function Dashboard({ stats, recentContracts }) {
     return (
         <div className="flex flex-1 flex-col">
             <div className="p-4 md:p-8">
@@ -38,14 +39,19 @@ export default function Dashboard({stats}) {
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     <div className="lg:col-span-8 xl:col-span-9 bg-card border border-border rounded-lg shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-                            <h2 className="text-base font-semibold">Recent Contracts</h2>
+                            <h2 className="text-base font-semibold">
+                                Recent Contracts
+                            </h2>
                             <button className="text-sm text-primary hover:opacity-80 transition-opacity no-blue-link">
                                 View all
                             </button>
                         </div>
 
                         <div className="overflow-x-auto">
-                            <ContractsOverviewTable />
+                            <ContractsTable
+                                contracts={recentContracts}
+                                bIsDashboard={true}
+                            />
                         </div>
                     </div>
                     <div className="flex flex-col gap-6 lg:col-span-4 xl:col-span-3">
@@ -65,7 +71,9 @@ export default function Dashboard({stats}) {
                 </div>
             </div>
         </div>
-    )
-};
+    );
+}
 
-Dashboard.layout = page => <TenantLayout title="Dashboard">{page}</TenantLayout>
+Dashboard.layout = (page) => (
+    <TenantLayout title="Dashboard">{page}</TenantLayout>
+);

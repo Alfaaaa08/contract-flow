@@ -12,6 +12,13 @@ use Inertia\Response;
 
 class DashboardController extends Controller {
     public function index(): Response {
+        return Inertia::render('Dashboard/Dashboard', [
+            'stats'           => $this->getStatusCardsData(),
+            'recentContracts' => $this->getRecentContracts()
+        ]);
+    }
+
+    private function getStatusCardsData() {
         $activeContractsCount = Contract::where('status', 2)->count();
 
         $expiringSoonCount = Contract::where('status', 2)
@@ -25,13 +32,30 @@ class DashboardController extends Controller {
             $query->where('status', 2);
         })->count();
 
-        return Inertia::render('Dashboard/Dashboard', [
-            'stats' => [
-                'activeContracts' => $activeContractsCount,
-                'expiringSoon'    => $expiringSoonCount,
-                'totalValue'      => $totalValue,
-                'activeClients'   => $activeClientsCount,
-            ]
-        ]);
+        return [
+            'activeContracts' => $activeContractsCount,
+            'expiringSoon'    => $expiringSoonCount,
+            'totalValue'      => $totalValue,
+            'activeClients'   => $activeClientsCount,
+        ];
+    }
+
+    private function getRecentContracts() {
+        $recentContracts = Contract::with(['client', 'type'])
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(fn($contract) => [
+                'id'       => $contract->id,
+                'name'     => $contract->name,
+                'client_id'  => $contract->client->id,
+                'client'     => $contract->client->name,
+                'value'      => $contract->value ?: 0,
+                'status'   => $contract->display_status,
+                'progress' => $contract->progress,
+                'type_icon'  => $contract->type->icon
+
+            ]);
+        return $recentContracts;
     }
 }
