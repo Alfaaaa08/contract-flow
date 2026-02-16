@@ -186,3 +186,84 @@ it('returns empty when search matches nothing', function () {
 
     expect($contracts)->toHaveCount(0);
 });
+
+
+// CREATE
+
+it('creates a contract with valid data', function () {
+    $tenant = createTenant('test-tenant');
+
+    $client = Client::factory()->create(['name' => 'Client', 'tenant_id' => $tenant->id]);
+    $type   = ContractType::factory()->create(['name' => 'Type', 'tenant_id' => $tenant->id]);
+
+    $user   = User::factory()->create();
+
+    actingAs($user)
+        ->post('http://test-tenant.localhost/contracts', [
+            'name'             => 'New Contract',
+            'client_id'        => $client->id,
+            'contract_type_id' => $type->id,
+            'start_date'       => '2026-03-01',
+            'end_date'         => '2026-12-31',
+            'value'            => 5000,
+        ])
+        ->assertStatus(302);
+
+    expect(Contract::where('name', 'New Contract')->exists())->toBeTrue();
+    expect(Contract::count())->toBe(1);
+});
+
+it('cannot create contract without required fields', function () {
+    $tenant = createTenant('test-tenant');
+    $user   = User::factory()->create();
+
+    actingAs($user)
+        ->post('http://test-tenant.localhost/contracts', [])
+        ->assertStatus(302)
+        ->assertSessionHasErrors(['name', 'client_id', 'contract_type_id']);
+
+    expect(Contract::count())->toBe(0);
+});
+
+it('cannot create contract with end date before start date', function () {
+    $tenant = createTenant('test-tenant');
+
+    $client = Client::factory()->create(['name' => 'Client', 'tenant_id' => $tenant->id]);
+    $type   = ContractType::factory()->create(['name' => 'Type', 'tenant_id' => $tenant->id]);
+
+    $user   = User::factory()->create();
+
+    actingAs($user)
+        ->post('http://test-tenant.localhost/contracts', [
+            'name'             => 'New Contract',
+            'client_id'        => $client->id,
+            'contract_type_id' => $type->id,
+            'start_date'       => '2026-12-01',
+            'end_date'         => '2026-10-01',
+            'value'            => 5000,
+        ])
+        ->assertStatus(302)
+        ->assertSessionHasErrors(['end_date']);
+
+    expect(Contract::count())->toBe(0);
+});
+
+it('cannot create contract with invalid client', function () {
+    $tenant = createTenant('test-tenant');
+
+    $type   = ContractType::factory()->create(['name' => 'Type', 'tenant_id' => $tenant->id]);
+
+    $user   = User::factory()->create();
+
+    actingAs($user)
+        ->post('http://test-tenant.localhost/contracts', [
+            'name'             => 'New Contract',
+            'client_id'        => 99999,
+            'contract_type_id' => $type->id,
+            'start_date'       => '2026-12-01',
+            'end_date'         => '2026-10-01',
+            'value'            => 5000,
+        ])
+        ->assertStatus(302)
+        ->assertSessionHasErrors(['client_id']);
+}); 
