@@ -51,18 +51,10 @@ abstract class TestCase extends BaseTestCase {
         ]);
     }
 
-    protected function tearDown(): void
-    {
-        Artisan::call('migrate:rollback', [
-            '--database' => 'sqlite',
-            '--force'    => true,
-        ]);
+    protected function tearDown(): void {
+        DB::purge('sqlite');
+        DB::purge('tenant');
 
         parent::tearDown();
-
-        $dbPath = __DIR__ . '/../database/testing.sqlite';
-        if (file_exists($dbPath)) {
-            unlink($dbPath);
-        }
     }
 }

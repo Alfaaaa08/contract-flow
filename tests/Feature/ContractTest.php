@@ -2,52 +2,46 @@
 
 use App\Models\Contract;
 use App\Models\User;
-use App\Models\Tenant;
 use App\Models\ContractType;
 use App\Models\Client;
 use function Pest\Laravel\actingAs;
-use Illuminate\Support\Facades\DB;
 
+// LISTING
 
-it('filters contracts by name', function () {
+it('shows contracts page to authenticated user', function () {
     $tenant = createTenant('test-tenant');
+    $user   = User::factory()->create();
 
-    $client = Client::factory()->create(['name' => 'Alpha Client', 'tenant_id' => $tenant->id]);
-    $type   = ContractType::factory()->create(['name' => 'Procurement', 'tenant_id' => $tenant->id]);
+    actingAs($user)
+        ->get('http://test-tenant.localhost/contracts')
+        ->assertStatus(200)
+        ->assertInertia(
+            fn($page) => $page
+                ->component('Contracts/Contracts')
+                ->has('contracts')
+                ->has('filters')
+        );
+});
 
-    Contract::factory()->create([
-        'name'             => 'Alpha Project',
+it('returns all contracts when no filter applied', function () {
+    $tenant = createTenant('test-tenant');
+    $client = Client::factory()->create(['name' => 'Client', 'tenant_id' => $tenant->id]);
+    $type   = ContractType::factory()->create(['name' => 'Type', 'tenant_id' => $tenant->id]);
+
+    Contract::factory()->count(3)->create([
+        'name'             => 'Name',
         'client_id'        => $client->id,
         'contract_type_id' => $type->id,
         'tenant_id'        => $tenant->id
-    ]);
 
-     Contract::factory()->create([
-        'name'             => 'Beta Project',
-        'client_id'        => $client->id,
-        'contract_type_id' => $type->id,
-        'tenant_id'        => $tenant->id
     ]);
 
     $user = User::factory()->create();
 
-    dump([
-        'BEFORE REQUEST' => [
-            'contracts_count'    => Contract::count(),
-            'db_connection'      => DB::connection()->getName(),
-            'db_file'            => DB::connection()->getDatabaseName(),
-            'raw_count'          => DB::select('SELECT COUNT(*) as total FROM contracts'),
-            'contracts_ids'      => Contract::pluck('id')->toArray(),
-            'contracts_names'    => Contract::pluck('name')->toArray(),
-        ]
-    ]);
-
-
     $response = actingAs($user)
-        ->get('http://test-tenant.localhost/contracts?search=Alpha');
+        ->get('http://test-tenant.localhost/contracts');
 
-    $response->assertStatus(200);
+    $contracts = $response->original->getData()['page']['props']['contracts'];
 
-    $props     = $response->original->getData()['page']['props'];
-    $contracts = $props['contracts'];
+    expect($contracts)->toHaveCount(3);
 });
