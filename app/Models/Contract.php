@@ -11,14 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Contract extends Model {
     use BelongsToTenant;
     use HasFactory;
-    protected $connection;
-
-    public function __construct(array $attributes = []) {
-
-        parent::__construct($attributes);
-
-        $this->connection = env('DB_CONNECTION', 'pgsql');
-    }
 
     public function getTable() {
         if (config('database.default') === 'sqlite') {
@@ -29,12 +21,11 @@ class Contract extends Model {
     }
 
     protected static function booted(): void {
-        if (config('database.default') === 'sqlite') {
+        if (config('database.default') !== 'pgsql') {
             return;
         }
 
         static::creating(function ($contract) {
-            // Temporary: hardcode to tenant 'contractflow' until Auth is ready 
             $contract->tenant_id = 'contractflow';
         });
     }

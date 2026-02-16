@@ -2,19 +2,26 @@
 
 uses(
     Tests\TestCase::class,
-    Illuminate\Foundation\Testing\RefreshDatabase::class,
+    Illuminate\Foundation\Testing\DatabaseMigrations::class,
 )->beforeEach(function () {
     config([
         'database.connections.tenant' => config('database.connections.sqlite'),
-        'tenancy.database.create' => false,
     ]);
 
     $bootstrappers = config('tenancy.bootstrappers');
-    if (($key = array_search(\Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper::class, $bootstrappers)) !== false) {
-        unset($bootstrappers[$key]);
-        config(['tenancy.bootstrappers' => array_values($bootstrappers)]);
-    }
+    $bootstrappers = array_filter(
+        $bootstrappers,
+        fn($b) => $b !== \Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper::class
+    );
+    config(['tenancy.bootstrappers' => array_values($bootstrappers)]);
 })->in('Feature', 'Unit');
+
+function createTenant(string $id = 'test-tenant'): \App\Models\Tenant {
+    $tenant = \App\Models\Tenant::factory()->create(['id' => $id]);
+    $tenant->domains()->create(['domain' => "{$id}.localhost"]);
+    tenancy()->initialize($tenant);
+    return $tenant;
+}
 
 uses()
     ->afterEach(function () {

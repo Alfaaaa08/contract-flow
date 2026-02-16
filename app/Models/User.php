@@ -10,8 +10,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
+
+    public function getTable(): string {
+        if (config('database.default') === 'pgsql') {
+            return 'public.users';
+        }
+        return 'users';
+    }
+    
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -51,8 +58,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
+    protected function casts(): array {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
@@ -63,8 +69,7 @@ class User extends Authenticatable
     /**
      * Check if the user is a central admin (for admin panel access).
      */
-    public function isAdmin(): bool
-    {
+    public function isAdmin(): bool {
         return $this->is_admin === true;
     }
 
@@ -72,16 +77,14 @@ class User extends Authenticatable
      * Check if the user is a tenant admin (for tenant app access).
      * Used in tenant context where 'role' column exists.
      */
-    public function isTenantAdmin(): bool
-    {
+    public function isTenantAdmin(): bool {
         return $this->role === 'admin';
     }
 
     /**
      * Check if the user has a specific role.
      */
-    public function hasRole(string $role): bool
-    {
+    public function hasRole(string $role): bool {
         return $this->role === $role;
     }
 
@@ -89,8 +92,7 @@ class User extends Authenticatable
      * Get the projects created by this user.
      * Only available in tenant context.
      */
-    public function projects(): HasMany
-    {
+    public function projects(): HasMany {
         return $this->hasMany(Project::class, 'created_by');
     }
 }

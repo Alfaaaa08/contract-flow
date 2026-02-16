@@ -11,20 +11,12 @@ class ContractType extends Model {
     use BelongsToTenant;
     use HasFactory;
 
-    protected $connection;
 
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
-
-        $this->connection = env('DB_CONNECTION', 'pgsql');
-    }
-
-    public function getTable() {
-        if (config('database.default') === 'sqlite') {
-            return 'contract_types';
+    public function getTable(): string {
+        if (config('database.default') === 'pgsql') {
+            return 'public.contract_types';
         }
-
-        return 'public.contract_types';
+        return 'contract_types';
     }
 
     protected $fillable = ['name', 'icon', 'tenant_id'];

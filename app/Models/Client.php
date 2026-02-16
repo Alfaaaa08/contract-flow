@@ -11,28 +11,11 @@ class Client extends Model {
     use BelongsToTenant;
     use HasFactory;
 
-    protected $connection;
-
-    public function __construct(array $attributes = []) {
-        parent::__construct($attributes);
-
-        $this->connection = env('DB_CONNECTION', 'pgsql');
-    }
-
-    public function getConnectionName()
-    {
-        return config('database.default');
-    }
-    
-    public function getTable()
-    {
-        $table = 'clients';
-        
-        if (config('database.default') === 'sqlite') {
-            return $table;
+    public function getTable(): string {
+        if (config('database.default') === 'pgsql') {
+            return 'public.clients';
         }
-
-        return "public.{$table}";
+        return 'clients';
     }
 
     protected $fillable = ['name', 'email'];
