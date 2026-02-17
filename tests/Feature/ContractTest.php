@@ -306,3 +306,62 @@ it('updates all columns from a contract with valid data', function () {
     expect($contract->fresh()->name)->toBe('Updated Name');
     expect($contract->fresh()->value)->toBe('9999.00');
 });
+
+// DELETE
+
+it('deletes a contract', function () {
+    $tenant = createTenant('test-tenant');
+
+    $client = Client::factory()->create(['name' => 'Client', 'tenant_id' => $tenant->id]);
+    $type   = ContractType::factory()->create(['name' => 'Type', 'tenant_id' => $tenant->id]);
+
+    $user   = User::factory()->create();
+
+    $contract = Contract::factory()->create([
+        'name'             => 'Contract',
+        'client_id'        => $client->id,
+        'contract_type_id' => $type->id,
+        'tenant_id'        => $tenant->id,
+    ]);
+
+
+    actingAs($user)
+        ->delete("http://test-tenant.localhost/contracts/{$contract->id}")
+        ->assertStatus(302);
+
+    expect(Contract::count())->toBe(0);
+});
+
+it('bulk deletes multiple contracts', function () {
+    $tenant = createTenant('test-tenant');
+
+    $client = Client::factory()->create(['name' => 'Client', 'tenant_id' => $tenant->id]);
+    $type   = ContractType::factory()->create(['name' => 'Type', 'tenant_id' => $tenant->id]);
+
+    $user   = User::factory()->create();
+
+    $contractA = Contract::factory()->create([
+        'name'             => 'Contract Alpha',
+        'client_id'        => $client->id,
+        'contract_type_id' => $type->id,
+        'tenant_id'        => $tenant->id,
+    ]);
+
+    $contractB = Contract::factory()->create([
+        'name'             => 'Contract Beta',
+        'client_id'        => $client->id,
+        'contract_type_id' => $type->id,
+        'tenant_id'        => $tenant->id,
+    ]);
+
+
+    actingAs($user)
+        ->delete("http://test-tenant.localhost/contracts/bulk-destroy", [
+            'ids' => [
+                $contractA->id, $contractB->id
+            ]
+        ])
+        ->assertStatus(302);
+
+    expect(Contract::count())->toBe(0);
+});
