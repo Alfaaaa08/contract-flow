@@ -266,4 +266,43 @@ it('cannot create contract with invalid client', function () {
         ])
         ->assertStatus(302)
         ->assertSessionHasErrors(['client_id']);
-}); 
+});
+
+// UPDATE
+
+it('updates all columns from a contract with valid data', function () {
+    $tenant = createTenant('test-tenant');
+
+    $clientA = Client::factory()->create(['name' => 'Client A', 'tenant_id' => $tenant->id]);
+    $clientB = Client::factory()->create(['name' => 'Client B', 'tenant_id' => $tenant->id]);
+    $typeA   = ContractType::factory()->create(['name' => 'Type B', 'tenant_id' => $tenant->id]);
+    $typeB   = ContractType::factory()->create(['name' => 'Type B', 'tenant_id' => $tenant->id]);
+
+    $user   = User::factory()->create();
+
+    $contract = Contract::factory()->create([
+        'name'             => 'Contract Name',
+        'client_id'        => $clientA->id,
+        'contract_type_id' => $typeA->id,
+        'tenant_id'        => $tenant->id,
+        'status'           => 1,
+        'start_date'       => '2026-05-15',
+        'end_date'         => '2026-05-15',
+        'value'            => 1111,
+    ]);
+
+
+    actingAs($user)
+        ->put("http://test-tenant.localhost/contracts/{$contract->id}", [
+            'name'             => 'Updated Name',
+            'client_id'        => $clientB->id,
+            'contract_type_id' => $typeB->id,
+            'start_date'       => '2026-06-01',
+            'end_date'         => '2026-06-15',
+            'value'            => 9999,
+        ])
+        ->assertStatus(302);
+
+    expect($contract->fresh()->name)->toBe('Updated Name');
+    expect($contract->fresh()->value)->toBe('9999.00');
+});
