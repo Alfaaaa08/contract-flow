@@ -13,7 +13,7 @@ class StoreContractRequest extends FormRequest {
     public function rules(): array {
         return [
             'name'             => ['required', 'string',  'max:255'],
-            'client_id'        => ['required', 'integer'],
+            'client_id'        => ['required', 'integer', 'exists:clients,id'],
             'contract_type_id' => ['required', 'integer'],
             'value'            => ['required', 'numeric', 'min:0'],
             'start_date'       => ['nullable', 'date',    'after_or_equal:today'],

@@ -255,12 +255,12 @@ it('cannot create contract with invalid client', function () {
 
     $user   = User::factory()->create();
 
-    actingAs($user)
+    $response = actingAs($user)
         ->post('http://test-tenant.localhost/contracts', [
             'name'             => 'New Contract',
             'client_id'        => 99999,
             'contract_type_id' => $type->id,
-            'start_date'       => '2026-12-01',
+            'start_date'       => '2026-08-01',
             'end_date'         => '2026-10-01',
             'value'            => 5000,
         ])
