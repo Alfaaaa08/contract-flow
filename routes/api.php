@@ -1,32 +1,17 @@
 <?php
 
-declare(strict_types=1);
-
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\TenantController;
+use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Central API Routes
-|--------------------------------------------------------------------------
-|
-| API routes for the central application (main domain).
-| These routes handle admin authentication and tenant management.
-|
-*/
-
 Route::prefix('v1')->group(function () {
-    // Public routes 
-    Route::post('/login', [AuthController::class, 'login']);
+    // Public routes
+    Route::post('auth/register', [AuthController::class, 'register']);
+    Route::post('auth/login', [AuthController::class, 'login']);
 
-    // Protected routes (requires authentication + admin)
-    Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::get('/user', [AuthController::class, 'user']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-
-        // Tenant management
-        Route::apiResource('tenants', TenantController::class);
-        Route::post('tenants/{tenant}/toggle-status', [TenantController::class, 'toggleStatus']);
+    // Protected routes
+    Route::middleware('auth:api')->group(function () {
+        Route::post('auth/logout', [AuthController::class, 'logout']);
+        Route::post('auth/refresh', [AuthController::class, 'refresh']);
+        Route::get('auth/me', [AuthController::class, 'me']);
     });
 });
