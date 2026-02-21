@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable {
+class User extends Authenticatable implements JWTSubject {
 
     public function getTable(): string {
         if (config('database.default') === 'pgsql') {
@@ -19,7 +19,7 @@ class User extends Authenticatable {
         }
         return 'users';
     }
-    
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -42,6 +42,7 @@ class User extends Authenticatable {
         'password',
         'is_admin',
         'role',
+        'tenant_id'
     ];
 
     /**
@@ -97,13 +98,11 @@ class User extends Authenticatable {
         return $this->hasMany(Project::class, 'created_by');
     }
 
-    public function getJWTIdentifier()
-    {
+    public function getJWTIdentifier() {
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims()
-    {
+    public function getJWTCustomClaims() {
         return [
             'tenant_id' => $this->tenant_id,
         ];
