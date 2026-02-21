@@ -20,26 +20,14 @@ return [
     ),
 
     /**
-     * Tenancy bootstrappers are executed when tenancy is initialized.
-     * Their responsibility is making Laravel features tenant-aware.
-     *
-     * To configure their behavior, see the config keys below.
-     */
-    'bootstrappers' => [
-        // Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper::class,
-        Stancl\Tenancy\Bootstrappers\CacheTenancyBootstrapper::class,
-        Stancl\Tenancy\Bootstrappers\FilesystemTenancyBootstrapper::class,
-        Stancl\Tenancy\Bootstrappers\QueueTenancyBootstrapper::class,
-        // Stancl\Tenancy\Bootstrappers\RedisTenancyBootstrapper::class, // Note: phpredis is needed
-    ],
-
-    /**
      * Database tenancy config. Used by DatabaseTenancyBootstrapper.
      */
     'database' => [
         'central_connection' => env('DB_CONNECTION', 'pgsql'),
         'create' => env('TENANCY_CREATE_DATABASE', true),
         'drop' => env('TENANCY_DROP_DATABASE', true),
+        'auto_create_tenant_databases' => false,
+        'auto_delete_tenant_databases' => false,
 
         /**
          * Connection used as a "template" for the dynamically created tenant database connection.
