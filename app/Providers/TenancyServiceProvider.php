@@ -13,13 +13,11 @@ use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 
-class TenancyServiceProvider extends ServiceProvider
-{
+class TenancyServiceProvider extends ServiceProvider {
     // By default, no namespace is used to support the callable array syntax.
     public static string $controllerNamespace = '';
 
-    public function events()
-    {
+    public function events() {
         return [
             // Tenant events
             Events\CreatingTenant::class => [],
@@ -88,21 +86,14 @@ class TenancyServiceProvider extends ServiceProvider
         ];
     }
 
-    public function register()
-    {
+    public function register() {
         //
     }
 
-    public function boot()
-    {
-        $this->bootEvents();
-        $this->mapRoutes();
-
-        $this->makeTenancyMiddlewareHighestPriority();
+    public function boot() {
     }
 
-    protected function bootEvents()
-    {
+    protected function bootEvents() {
         foreach ($this->events() as $event => $listeners) {
             foreach ($listeners as $listener) {
                 if ($listener instanceof JobPipeline) {
@@ -114,8 +105,7 @@ class TenancyServiceProvider extends ServiceProvider
         }
     }
 
-    protected function mapRoutes()
-    {
+    protected function mapRoutes() {
         $this->app->booted(function () {
             if (file_exists(base_path('routes/tenant.php'))) {
                 Route::namespace(static::$controllerNamespace)
@@ -124,8 +114,7 @@ class TenancyServiceProvider extends ServiceProvider
         });
     }
 
-    protected function makeTenancyMiddlewareHighestPriority()
-    {
+    protected function makeTenancyMiddlewareHighestPriority() {
         $tenancyMiddleware = [
             // Even higher priority than the initialization middleware
             Middleware\PreventAccessFromCentralDomains::class,
