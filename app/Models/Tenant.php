@@ -6,12 +6,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
-class Tenant extends BaseTenant implements TenantWithDatabase {
+class Tenant extends BaseTenant {
     use HasDatabase, HasDomains, HasFactory;
 
     /**
@@ -83,5 +82,16 @@ class Tenant extends BaseTenant implements TenantWithDatabase {
 
     public function getConnectionName() {
         return config('database.default');
+    }
+
+    public static function booted() {
+    }
+
+    public function createDatabase(): void {
+        return;
+    }
+
+    public function deleteDatabase(): void {
+        return;
     }
 }
