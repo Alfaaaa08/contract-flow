@@ -41,6 +41,10 @@ class Contract extends Model {
         'start_date',
     ];
 
+    protected $attributes = [
+        'status' => 1,
+    ];
+
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
