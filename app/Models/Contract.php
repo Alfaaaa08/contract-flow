@@ -20,15 +20,14 @@ class Contract extends Model {
         return 'public.contracts';
     }
 
-    protected static function booted(): void {
-        if (config('database.default') !== 'pgsql') {
-            return;
+    protected static function booted(): void
+{
+    static::creating(function ($contract) {
+        if (tenancy()->initialized && empty($contract->tenant_id)) {
+            $contract->tenant_id = tenancy()->tenant->id;
         }
-
-        static::creating(function ($contract) {
-            $contract->tenant_id = 'contractflow';
-        });
-    }
+    });
+}
 
     protected $fillable = [
         'name',
