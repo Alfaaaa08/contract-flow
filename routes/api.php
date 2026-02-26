@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ContractController;
+use App\Http\Controllers\Api\V1\ClientController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -21,5 +22,9 @@ Route::prefix('v1')->group(function () {
         Route::get('contracts/expiring', [ContractController::class, 'expiring']);
         Route::delete('contracts/bulk', [ContractController::class, 'bulkDestroy']);
         Route::apiResource('contracts', ContractController::class);
+
+        // Clients
+        Route::get('clients/{client}/contracts', [ClientController::class, 'contracts']);
+        Route::apiResource('clients', ClientController::class);
     });
 });
