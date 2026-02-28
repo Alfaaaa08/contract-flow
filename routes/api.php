@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ContractController;
 use App\Http\Controllers\Api\V1\ClientController;
+use App\Http\Controllers\Api\V1\ContractTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -26,5 +27,9 @@ Route::prefix('v1')->group(function () {
         // Clients
         Route::get('clients/{client}/contracts', [ClientController::class, 'contracts']);
         Route::apiResource('clients', ClientController::class);
+
+        // Contract types
+        Route::get('contract-types/{contractType}/contracts', [ContractTypeController::class, 'contracts']);
+        Route::apiResource('contract-types', ContractTypeController::class);
     });
 });
