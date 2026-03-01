@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Resources\V1\UserResource;
@@ -13,14 +13,49 @@ use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller {
+
 	/**
-	 * Register a new user and tenant.
-	 * 
-	 * Creates a new tenant with domain, then creates the user associated with that tenant.
-	 * Returns JWT token for immediate authentication.
-	 *
-	 * @param  RegisterRequest  $request
-	 * @return JsonResponse
+	 * @OA\Post(
+	 *     path="/auth/register",
+	 *     tags={"Authentication"},
+	 *     summary="Register a new user and tenant",
+	 *     description="Creates a new tenant and user, returns JWT token",
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"name","email","password","password_confirmation","company"},
+	 *             @OA\Property(property="name", type="string", example="John Doe"),
+	 *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+	 *             @OA\Property(property="password", type="string", format="password", example="password123"),
+	 *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
+	 *             @OA\Property(property="company", type="string", example="Acme Corp")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=201,
+	 *         description="User registered successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="User registered successfully"),
+	 *             @OA\Property(property="user", ref="#/components/schemas/User"),
+	 *             @OA\Property(property="tenant", type="object",
+	 *                 @OA\Property(property="id", type="string", example="acme-corp"),
+	 *                 @OA\Property(property="name", type="string", example="Acme Corp"),
+	 *                 @OA\Property(property="domain", type="string", example="acme-corp.contractflow.test")
+	 *             ),
+	 *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGci..."),
+	 *             @OA\Property(property="token_type", type="string", example="bearer"),
+	 *             @OA\Property(property="expires_in", type="integer", example=3600)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=422,
+	 *         description="Validation error",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string"),
+	 *             @OA\Property(property="errors", type="object")
+	 *         )
+	 *     )
+	 * )
 	 */
 	public function register(RegisterRequest $request): JsonResponse {
 		try {
@@ -38,22 +73,18 @@ class AuthController extends Controller {
 				'name' => $request->company,
 			]);
 
-			// Create domain
 			$domain = $tenantId . '.contractflow.test';
 			$tenant->domains()->create(['domain' => $domain]);
 
-			// Initialize tenancy
 			tenancy()->initialize($tenant);
 
-			// Create user
 			$user = User::create([
 				'name'      => $request->name,
 				'email'     => $request->email,
 				'password'  => bcrypt($request->password),
 				'tenant_id' => $tenant->id,
 			]);
-			
-			// Generate token
+
 			$token = JWTAuth::fromUser($user);
 
 			return response()->json([
@@ -77,10 +108,39 @@ class AuthController extends Controller {
 	}
 
 	/**
-	 * Authenticate user and return JWT token.
-	 *
-	 * @param  LoginRequest  $request
-	 * @return JsonResponse
+	 * @OA\Post(
+	 *     path="/auth/login",
+	 *     tags={"Authentication"},
+	 *     summary="Authenticate user",
+	 *     description="Login with email and password, returns JWT token",
+	 *     @OA\RequestBody(
+	 *         required=true,
+	 *         @OA\JsonContent(
+	 *             required={"email","password"},
+	 *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+	 *             @OA\Property(property="password", type="string", format="password", example="password123")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Login successful",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Login successful"),
+	 *             @OA\Property(property="user", ref="#/components/schemas/User"),
+	 *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGci..."),
+	 *             @OA\Property(property="token_type", type="string", example="bearer"),
+	 *             @OA\Property(property="expires_in", type="integer", example=3600)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Invalid credentials",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Invalid credentials"),
+	 *             @OA\Property(property="error", type="string")
+	 *         )
+	 *     )
+	 * )
 	 */
 	public function login(LoginRequest $request): JsonResponse {
 		$credentials = $request->credentials();
@@ -104,9 +164,27 @@ class AuthController extends Controller {
 	}
 
 	/**
-	 * Log out the authenticated user (invalidate token).
-	 *
-	 * @return JsonResponse
+	 * @OA\Post(
+	 *     path="/auth/logout",
+	 *     tags={"Authentication"},
+	 *     summary="Logout user",
+	 *     description="Invalidate the JWT token",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Successfully logged out",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Successfully logged out")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated")
+	 *         )
+	 *     )
+	 * )
 	 */
 	public function logout(): JsonResponse {
 		JWTAuth::invalidate(JWTAuth::getToken());
@@ -117,11 +195,31 @@ class AuthController extends Controller {
 	}
 
 	/**
-	 * Refresh the JWT token.
-	 * 
-	 * Returns a new token while invalidating the old one.
-	 *
-	 * @return JsonResponse
+	 * @OA\Post(
+	 *     path="/auth/refresh",
+	 *     tags={"Authentication"},
+	 *     summary="Refresh JWT token",
+	 *     description="Get a new JWT token using the current token",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Token refreshed successfully",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Token refreshed successfully"),
+	 *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGci..."),
+	 *             @OA\Property(property="token_type", type="string", example="bearer"),
+	 *             @OA\Property(property="expires_in", type="integer", example=3600)
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Token is invalid or expired",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string"),
+	 *             @OA\Property(property="error", type="string")
+	 *         )
+	 *     )
+	 * )
 	 */
 	public function refresh(): JsonResponse {
 		try {
@@ -147,9 +245,27 @@ class AuthController extends Controller {
 	}
 
 	/**
-	 * Get the authenticated user.
-	 *
-	 * @return JsonResponse
+	 * @OA\Get(
+	 *     path="/auth/me",
+	 *     tags={"Authentication"},
+	 *     summary="Get authenticated user",
+	 *     description="Returns the currently authenticated user",
+	 *     security={{"bearerAuth":{}}},
+	 *     @OA\Response(
+	 *         response=200,
+	 *         description="Authenticated user data",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="user", ref="#/components/schemas/User")
+	 *         )
+	 *     ),
+	 *     @OA\Response(
+	 *         response=401,
+	 *         description="Unauthenticated",
+	 *         @OA\JsonContent(
+	 *             @OA\Property(property="message", type="string", example="Unauthenticated")
+	 *         )
+	 *     )
+	 * )
 	 */
 	public function me(): JsonResponse {
 		$user = JWTAuth::user();
