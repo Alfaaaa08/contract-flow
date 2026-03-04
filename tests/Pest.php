@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Tenant;
+use App\Models\User;
+
 uses(
     Tests\TestCase::class,
     Illuminate\Foundation\Testing\DatabaseMigrations::class,
@@ -36,3 +39,29 @@ uses()
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
+
+/**
+ * Create a user with JWT token
+ */
+function createUserWithToken(Tenant $tenant): array
+{
+    tenancy()->initialize($tenant);
+    
+    $user = User::create([
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'password' => bcrypt('password'),
+        'tenant_id' => $tenant->id,
+    ]);
+
+    $token = \Tymon\JWTAuth\Facades\JWTAuth::fromUser($user);
+
+    return [
+        'user' => $user,
+        'token' => $token,
+        'headers' => [
+            'Authorization' => "Bearer {$token}",
+            'Accept' => 'application/json',
+        ],
+    ];
+}
